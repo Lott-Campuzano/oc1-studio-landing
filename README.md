@@ -19,16 +19,18 @@ dependencias. Abre `index.html` y funciona.
   Helvetica para el cuerpo. Con fallback monoespaciado si no hay red.
 * **Las cuatro teclas del OP-1** como colores funcionales fijos de hardware:
   naranja = kick, azul = pulse, verde = hat, blanco = seq.
-* **Industrial**: cursor `>_` parpadeante en la marca, secciones numeradas
-  `01 02 03 04`, retícula de puntos, etiquetas de archivo
-  (`secuenciador · chip 8-bit`), encoders giratorios.
-* **Píldoras y tarjetas suaves**: botones/chips/toasts en `999px`, tarjetas y
-  paneles con radio personalizable y sombra doble suave.
+* **Industrial y plano**: cursor `>_` parpadeante en la marca, secciones
+  numeradas `01 02 03 04`, retícula de puntos, etiquetas de archivo
+  (`secuenciador · chip 8-bit`), encoders giratorios. Esquinas cuadradas
+  en todos los componentes y superficies sin sombras.
+* **Tarjetas-módulo**: paneles planos con borde duro, cabecera con índice
+  numerado (`01…06`) y bloque de código enmarcado — como un rack de
+  hardware. El knob circular es la única curva, como en el hardware.
 * **Secuenciador demo funcional**: 16 pasos × 3 pistas con WebAudio (ondas
   cuadradas chiptune, cero muestras), presets tipo lecciones (`chip_boy`,
   `acid_808`, vacío) y **autoguardado del patrón** en `localStorage`.
-* **Todo se guarda en tu navegador. Tu espacio, tus reglas.**: tema, acento,
-  esquinas y tamaño base persisten en `oc1:landing:v1`.
+* **Todo se guarda en tu navegador. Tu espacio, tus reglas.**: tema, acento
+  y tamaño base persisten en `oc1:landing:v1`.
 * **Temas**: `AUTO` sigue a tu sistema (`prefers-color-scheme`), más `DARK` y
   `LIGHT` fijos — como la TUI de OC-1.
 * **Responsive** (1080px contenedor; quiebres en 900px y 640px) y

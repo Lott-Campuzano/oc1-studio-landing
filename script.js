@@ -23,7 +23,7 @@ function loadJson(key) {
 
 /* ═══════════════ Personalización ═══════════════ */
 const SETTINGS_KEY = 'oc1:landing:v1';
-const SETTINGS_DEFAULTS = { theme: 'auto', accent: '#dc143c', radius: 14, size: 16 };
+const SETTINGS_DEFAULTS = { theme: 'auto', accent: '#dc143c', size: 16 };
 let settings = { ...SETTINGS_DEFAULTS };
 
 function loadSettings() {
@@ -38,15 +38,12 @@ function applySettings() {
   const root = document.documentElement;
   root.dataset.theme = settings.theme;
   root.style.setProperty('--accent', settings.accent);
-  root.style.setProperty('--radius', settings.radius + 'px');
   root.style.setProperty('--size', settings.size + 'px');
 
   $$('#swatches .swatch[data-accent]').forEach((b) =>
     b.classList.toggle('active', b.dataset.accent.toLowerCase() === String(settings.accent).toLowerCase()));
   const accentInput = $('#accent-input');
   if (accentInput) accentInput.value = settings.accent;
-  const rad = $('#radius-range');
-  if (rad) { rad.value = settings.radius; $('#radius-out').textContent = settings.radius + 'px'; }
   const siz = $('#size-range');
   if (siz) { siz.value = settings.size; $('#size-out').textContent = settings.size + 'px'; }
   $$('#theme-seg button').forEach((b) =>
@@ -72,9 +69,6 @@ function bindSettings() {
   }));
   $('#accent-input').addEventListener('input', (e) => {
     settings.accent = e.target.value; persistSettings(); applySettings();
-  });
-  $('#radius-range').addEventListener('input', (e) => {
-    settings.radius = +e.target.value; persistSettings(); applySettings();
   });
   $('#size-range').addEventListener('input', (e) => {
     settings.size = +e.target.value; persistSettings(); applySettings();
@@ -119,15 +113,18 @@ const FEATURES = [
   },
 ];
 
-function cardEl(card) {
+function cardEl(card, i) {
   const art = document.createElement('article');
   art.className = 'card';
 
   const head = document.createElement('header');
   head.className = 'card-head';
+  const num = document.createElement('span');
+  num.className = 'card-num';
+  num.textContent = String(i + 1).padStart(2, '0');
   const h4 = document.createElement('h4');
   h4.textContent = card.t;
-  head.append(h4);
+  head.append(num, h4);
 
   const p = document.createElement('p');
   p.textContent = card.d;
@@ -409,7 +406,7 @@ function init() {
   applySettings();
   bindSettings();
 
-  FEATURES.forEach((c) => $('#cards').appendChild(cardEl(c)));
+  FEATURES.forEach((c, i) => $('#cards').appendChild(cardEl(c, i)));
 
   buildGrid();
   renderPresets();
