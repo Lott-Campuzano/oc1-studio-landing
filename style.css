@@ -1,482 +1,445 @@
-/* OC-1 STUDIO — landing · CSS puro, sin frameworks
-   Estética Teenage Engineering: mono, 4 acentos, encoders, panels.
-   Temas: sigue al sistema (prefers-color-scheme) con override manual. */
+/* ═══════════════════════════════════════════════════════
+   OC-1 STUDIO · estilos
+   Filosofía: una sola fuente — JetBrains Mono — y un acento
+   fijo como el hardware (carmesí #dc143c). El tema sigue
+   al sistema; nada se personaliza, todo es instrumental.
+   Estética: minimalista industrial a lo TE / Arturia —
+   neutros fríos, un solo acento, esquinas cuadradas
+   y superficies planas sin sombras.
+   ═══════════════════════════════════════════════════════ */
 
-/* ---------- tokens ---------- */
+/* ── tokens de diseño ────────────────────────────────────────
+   Toda la identidad vive en estas variables. El resto del
+   archivo solo las consume: cambiar aquí cambia la página. */
 :root {
-  --orange: #ff5300;
-  --blue: #00a8ff;
-  --green: #00d26a;
-  --white: #f0f0f0;
+  --accent: #dc143c;              /* rojo carmesí · fijo, como el hardware */
+  --on-accent: #ffffff;           /* texto que va sobre el acento */
 
-  /* claro — cara "field": hueso + tinta grafito */
-  --bg: #f4f1ec;
-  --surface: #ffffff;
-  --panel: #e7e3dc;
-  --ink: #22201d;
-  --ink-dim: #6b675f;
-  --line: #d8d3c9;
-  --accent: var(--orange);
-  color-scheme: light;
+  /* claro — blanco hueso frío + carbón */
+  --bg: #f2f2ef;
+  --bg-soft: #e7e7e3;
+  --card: #fbfbf9;
+  --text: #202224;
+  --muted: #6b6f73;
+  --border: #dcdcd7;
+
+  /* los cuatro colores de tecla del OP-1 · fijos como hardware */
+  --key-orange: #ff5300;
+  --key-blue: #00a8ff;
+  --key-green: #00d26a;
+  --key-white: #f0f0f0;
+
+  /* una sola fuente para absolutamente todo (marca, titulares,
+     cuerpo, código) — el monoespaciado ES la identidad,
+     como en arturia.com y opencode.ai */
+  --size: 16px;                   /* tamaño base tipográfico */
+  --font: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  color-scheme: light;            /* esquema claro por defecto */
 }
-html[data-theme="dark"] {
-  --bg: #121212;
-  --surface: #1d1d1d;
-  --panel: #232323;
-  --ink: #e8e6e3;
-  --ink-dim: #9a9a9a;
-  --line: #333333;
-  color-scheme: dark;
-}
+
+/* el tema oscuro no se elige: lo decide el sistema.
+   @media lee el esquema del SO y :root reasigna los tokens */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #121212;
-    --surface: #1d1d1d;
-    --panel: #232323;
-    --ink: #e8e6e3;
-    --ink-dim: #9a9a9a;
-    --line: #333333;
+  :root {
+    --bg: #101112;                  /* negro carbón */
+    --bg-soft: #1a1c1e;
+    --card: #16181a;
+    --text: #ededee;
+    --muted: #9b9ea2;
+    --border: #2b2e30;
     color-scheme: dark;
   }
 }
 
-/* ---------- base ---------- */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+/* ---------- base · reset mínimo y tipografía global ---------- */
+* { box-sizing: border-box; }                     /* los bordes no ensanchan las cajas */
+[hidden] { display: none !important; }            /* el atributo hidden siempre gana */
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }   /* anclas no quedan bajo la topbar fija */
 body {
-  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
-               "Liberation Mono", monospace;
+  margin: 0;
   background: var(--bg);
-  color: var(--ink);
-  line-height: 1.55;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--size);
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
-  transition: background 0.25s, color 0.25s;
+  text-rendering: optimizeLegibility;
+  transition: background .25s ease, color .25s ease;
 }
-::selection { background: var(--orange); color: #121212; }
-a { color: inherit; text-decoration: none; }
-code {
-  font-family: inherit;
-  background: var(--panel);
-  padding: 0.1em 0.35em;
-  border-radius: 4px;
-  font-size: 0.92em;
-}
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+::selection { background: color-mix(in srgb, var(--accent) 26%, transparent); }   /* selección en carmesí translúcido */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 0; }   /* foco visible para teclado */
+input[type='range'], input[type='checkbox'], input[type='color'], input[type='number'] { accent-color: var(--accent); }   /* controles nativos teñidos */
+/* una sola fuente en toda la página: JetBrains Mono.
+   Titulares en peso 400 con tracking apretado, como opencode.ai */
+h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
 
-/* puntos de color TE */
+.container { max-width: 1080px; margin-inline: auto; padding-inline: 24px; }   /* ancho de lectura + aire lateral */
+
+/* puntos LED de 9px que marcan pista o estado: comparten forma,
+   cambia solo el color (las teclas del OP-1) */
 .dot {
-  display: inline-block;
-  width: 9px; height: 9px;
-  border-radius: 50%;
-  vertical-align: middle;
-  flex: none;
+  width: 9px; height: 9px; border-radius: 50%;    /* única curva pequeña permitida */
+  display: inline-block; flex: none;
 }
-.dot-orange { background: var(--orange); }
-.dot-blue   { background: var(--blue); }
-.dot-green  { background: var(--green); }
-.dot-white  { background: var(--white); box-shadow: 0 0 0 1px var(--line); }
+.dot-orange { background: var(--key-orange); }    /* kick */
+.dot-blue   { background: var(--key-blue); }      /* pulse */
+.dot-green  { background: var(--key-green); }     /* hat */
+.dot-white  { background: var(--key-white); box-shadow: 0 0 0 1px var(--border); }   /* seq · anillo para verla sobre claro */
 
-/* ---------- barra superior ---------- */
-.top {
-  position: sticky; top: 0; z-index: 50;
-  display: flex; align-items: center; gap: 1.2rem;
-  padding: 0.65rem 1.2rem;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--line);
-}
-.brand {
-  font-weight: 700; letter-spacing: 0.08em;
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  white-space: nowrap;
-}
-.pulse-dot { animation: dotpulse 1.6s ease-in-out infinite; }
-@keyframes dotpulse { 50% { opacity: 0.35; } }
-.nav { display: flex; gap: 1.1rem; margin-left: auto; }
-.nav a {
-  font-size: 0.72rem; letter-spacing: 0.12em; color: var(--ink-dim);
-}
-.nav a:hover { color: var(--accent); }
-.top-actions { display: flex; align-items: center; gap: 0.6rem; }
-
-.theme-btn {
-  font: inherit; font-size: 0.72rem; letter-spacing: 0.1em;
-  display: inline-flex; align-items: center; gap: 0.45rem;
-  padding: 0.4rem 0.7rem;
-  border: 1px solid var(--line); border-radius: 8px;
-  background: var(--surface); color: var(--ink);
-  cursor: pointer;
-}
-.theme-btn:hover { border-color: var(--accent); }
-
-/* ---------- botones ---------- */
+/* ---------- botones · rectangulares, placa de hardware ----------
+   .btn       acción primaria: relleno carmesí, texto blanco
+   .btn.ghost acción secundaria: transparente con borde
+   .btn.small versión compacta para la topbar                */
 .btn {
-  display: inline-block;
-  font: inherit; font-size: 0.8rem; letter-spacing: 0.1em;
-  padding: 0.7rem 1.3rem;
-  border: 1.5px solid var(--ink); border-radius: 9px;
-  color: var(--ink); background: transparent;
-  cursor: pointer; white-space: nowrap;
-  transition: transform 0.08s, background 0.15s, color 0.15s, border-color 0.15s;
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 0; cursor: pointer; font: inherit; font-size: 14px;
+  padding: 10px 18px; border-radius: 0;
+  background: var(--accent); color: var(--on-accent);
+  text-decoration: none; white-space: nowrap;
+  transition: transform .2s ease, filter .2s ease;
 }
-.btn:active { transform: translateY(1px); }
-.btn-orange { border-color: var(--orange); background: var(--orange); color: #121212; font-weight: 700; }
-.btn-orange:hover { background: transparent; color: var(--orange); }
-.btn-ghost { border-color: var(--line); color: var(--ink-dim); }
-.btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
-.btn-sm { padding: 0.42rem 0.8rem; font-size: 0.72rem; }
+.btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+.btn.ghost:hover { border-color: var(--accent); filter: none; }
+.btn.small { padding: 6px 13px; font-size: 12.5px; }
 
-/* ---------- hero ---------- */
-.hero {
-  max-width: 60rem;
-  margin: 0 auto;
-  padding: 5.5rem 1.4rem 3.5rem;
-  text-align: center;
+/* botón cuadrado de icono: copiar ⧉, cerrar ✕, ↗ … */
+.icon-btn {
+  width: 28px; height: 28px; display: inline-grid; place-items: center;
+  border: 1px solid var(--border); border-radius: 0;
+  background: transparent; color: var(--muted);
+  cursor: pointer; font-size: 13px; padding: 0; text-decoration: none;
+  font-family: var(--font);
+  transition: color .2s ease, border-color .2s ease;
 }
-.kicker {
-  font-size: 0.72rem; letter-spacing: 0.22em; color: var(--ink-dim);
-  display: flex; align-items: center; justify-content: center; gap: 0.55rem;
-}
-.hero h1 {
-  margin: 1.1rem 0 1.3rem;
-  font-size: clamp(1.9rem, 6.4vw, 4.1rem);
-  line-height: 1.06;
-  letter-spacing: -0.01em;
-  font-weight: 800;
-}
-.hl { color: var(--accent); }
-.sub {
-  max-width: 44rem; margin: 0 auto 1.9rem;
-  color: var(--ink-dim); font-size: clamp(0.92rem, 2.2vw, 1.02rem);
-}
-.sub b { color: var(--ink); }
-.cta { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+.icon-btn:hover { color: var(--accent); border-color: var(--accent); }
 
-/* tira de 16 pasos — CSS puro */
-.led-strip {
-  display: grid;
-  grid-template-columns: repeat(16, 1fr);
-  gap: 5px;
-  max-width: 34rem;
-  margin: 3.2rem auto 0;
+/* ---------- topbar · fija arriba, translúcida con blur ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
 }
-.led-strip span {
-  height: 26px;
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  background: var(--panel);
-  animation: led 1.071s steps(1) infinite;
+.topbar-inner { display: flex; align-items: center; gap: 20px; height: 60px; }
+.brand {
+  font-family: var(--font);
+  font-weight: 700; font-size: 16.5px; letter-spacing: -.02em;
+  color: var(--text); text-decoration: none; white-space: nowrap;
 }
-.led-strip span:nth-child(4n+1) { border-color: color-mix(in srgb, var(--orange) 55%, var(--line)); }
-@keyframes led {
-  0%, 100% { opacity: 0.35; }
-  8% { opacity: 1; background: var(--orange); border-color: var(--orange); }
-  16% { opacity: 0.35; background: var(--panel); border-color: var(--line); }
+/* el guion bajo `_` de la marca parpadea: cursor de terminal vivo */
+.brand span { color: var(--accent); animation: blink 1.2s steps(2, start) infinite; }
+@keyframes blink { to { visibility: hidden; } }        /* el cursor desaparece a saltos, como un caret */
+.nav { display: flex; gap: 2px; margin-inline: auto; }   /* centrada: margin auto a ambos lados */
+.nav a {
+  padding: 6px 12px; border-radius: 0; text-decoration: none;
+  color: var(--muted); font-size: 13.5px;
+  transition: color .2s ease, background .2s ease;
 }
-.led-strip span:nth-child(1)  { animation-delay: 0s; }
-.led-strip span:nth-child(2)  { animation-delay: 0.067s; }
-.led-strip span:nth-child(n+3)  { animation-delay: 0.134s; }
-.led-strip span:nth-child(n+4)  { animation-delay: 0.201s; }
-.led-strip span:nth-child(n+5)  { animation-delay: 0.268s; }
-.led-strip span:nth-child(n+6)  { animation-delay: 0.335s; }
-.led-strip span:nth-child(n+7)  { animation-delay: 0.402s; }
-.led-strip span:nth-child(n+8)  { animation-delay: 0.469s; }
-.led-strip span:nth-child(n+9)  { animation-delay: 0.536s; }
-.led-strip span:nth-child(n+10) { animation-delay: 0.603s; }
-.led-strip span:nth-child(n+11) { animation-delay: 0.670s; }
-.led-strip span:nth-child(n+12) { animation-delay: 0.737s; }
-.led-strip span:nth-child(n+13) { animation-delay: 0.804s; }
-.led-strip span:nth-child(n+14) { animation-delay: 0.871s; }
-.led-strip span:nth-child(n+15) { animation-delay: 0.938s; }
-.led-strip span:nth-child(n+16) { animation-delay: 1.005s; }
+.nav a:hover { color: var(--text); }
+.nav a.active {   /* sección visible: lo marca el JS con IntersectionObserver */
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.topbar-actions { display: flex; gap: 8px; align-items: center; }
 
-/* teclas de color OP-1 */
+/* ---------- portada ---------- */
+.hero { padding: 92px 24px 64px; }    /* mucho aire arriba: primera impresión */
+.kicker {   /* línea pequeña sobre el titular, estilo serigrafía */
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font); font-size: 12px; letter-spacing: .5px;
+  color: var(--muted); text-transform: lowercase;
+}
+.kicker .dot { background: var(--accent); animation: dotpulse 1.6s ease-in-out infinite; }   /* LED respirando */
+@keyframes dotpulse { 50% { opacity: .35; } }
+.hero h1 {   /* titular: peso 400 + tracking -.03em, como opencode.ai;
+                clamp escala de móvil a escritorio sin media queries */
+  margin: 14px 0 0;
+  font-size: clamp(2.1rem, 4.8vw, 3.5rem);
+  line-height: 1.05; letter-spacing: -.03em; font-weight: 400;
+  max-width: 22ch;
+}
+.hero h1 em { font-style: italic; color: var(--accent); }    /* «nuevo instrumento» resaltado */
+.lead { color: var(--muted); max-width: 62ch; margin: 16px 0 0; }   /* 62ch: medida óptima de lectura */
+.lead b { color: var(--text); }     /* las negritas dentro del lead suben a tinta */
+.hero-actions { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }   /* CTAs dobles */
+
+/* las cuatro teclas del OP-1 · chips decorativos con su LED */
 .color-keys {
-  display: flex; gap: 0.7rem; justify-content: center;
-  margin-top: 1.6rem; flex-wrap: wrap;
+  display: flex; gap: 10px; justify-content: center;
+  margin-top: 36px; flex-wrap: wrap;
 }
 .key {
-  font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
-  padding: 0.5rem 1rem; border-radius: 8px;
-  border: 1px solid var(--line); color: var(--ink-dim);
-  background: var(--surface);
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 12px; letter-spacing: .3px;
+  padding: 6px 14px; border-radius: 0;
+  border: 1px solid var(--border); color: var(--muted);
+  background: var(--card);
+  transition: border-color .2s ease, color .2s ease;
 }
-.key::before { content: "● "; }
-.key-orange::before { color: var(--orange); }
-.key-blue::before   { color: var(--blue); }
-.key-green::before  { color: var(--green); }
-.key-white::before  { color: var(--white); }
+.key:hover { border-color: var(--accent); color: var(--text); }
 
-/* ---------- secciones ---------- */
-.section {
-  max-width: 60rem;
-  margin: 0 auto;
-  padding: 3.2rem 1.4rem;
+/* ---------- secciones · separadas por regla horizontal, numeradas ---------- */
+.section { border-top: 1px solid var(--border); padding: 76px 24px; }   /* cada bloque empieza con su línea */
+.section-head { display: flex; gap: 18px; align-items: flex-start; margin-bottom: 28px; }
+.num {   /* badge 01/02/03/04 en carmesí — índice de módulo */
+  font-size: 13px; color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  border-radius: 0; padding: 3px 11px; height: fit-content; margin-top: 6px;
 }
-.section-enc { padding-top: 0.5rem; }
-.section-title {
-  font-size: 0.85rem; letter-spacing: 0.2em; font-weight: 700;
-  display: flex; align-items: center; gap: 0.6rem;
+.section h2 { margin: 6px 0 0; font-size: 1.5rem; letter-spacing: -.03em; font-weight: 400; }   /* titular de sección, mono regular */
+.section .lead { margin-top: 8px; }
+.hint { font-size: 12px; color: var(--muted); font-family: var(--font); }   /* letra pequeña tipo manual */
+.hint.center { text-align: center; margin-top: 14px; }
+.hint a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+/* ---------- tarjetas · módulos planos tipo panel de hardware ----------
+   Cada tarjeta es un módulo de rack: borde duro, franja de cabecera
+   con número de módulo, descripción y bloque de código enmarcado.
+   Sin sombra ni levantamiento: el hover solo tiñe el borde. */
+.cards {   /* rejilla automática: columnas de ≥300px que caben */
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
 }
-.section-sub {
-  color: var(--ink-dim); margin: 0.8rem 0 1.8rem;
-  max-width: 46rem; font-size: 0.95rem;
+.card {   /* columna flex: cabecera arriba, pre pegado abajo */
+  display: flex; flex-direction: column;
+  background: var(--card); border: 1px solid var(--border);
+  transition: border-color .15s ease, background .15s ease;
 }
-.section-sub b { color: var(--ink); }
-.hint {
-  font-size: 0.78rem; color: var(--ink-dim); letter-spacing: 0.03em;
+.card:hover { border-color: var(--accent); }   /* feedback seco, sin movimiento */
+.card-head {   /* franja superior tipo serigrafía */
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 12px;
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
 }
-.hint.center { text-align: center; margin-top: 1.1rem; }
-.hint a { color: var(--accent); text-decoration: underline; }
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 14px;
+.card-num {   /* 01…06 — lo escribe el JS con padStart */
+  font-family: var(--font); font-size: 10.5px; letter-spacing: 1px;
+  color: var(--accent); flex: none;
+}
+.card h4 { margin: 0; font-size: 12.5px; font-weight: 600; letter-spacing: .2px; }   /* etiqueta de módulo, no titular */
+.card p { margin: 0; padding: 12px 14px 4px; font-size: 13.5px; color: var(--muted); flex: 1; }   /* flex:1 empuja el pre abajo */
+.card pre {   /* comando de ejemplo, enmarcado */
+  margin: 10px 14px 14px; padding: 8px 10px; overflow-x: auto;
+  background: var(--bg-soft); border: 1px solid var(--border); border-radius: 0;
+  font-family: var(--font); font-size: 12px; line-height: 1.55;
 }
 
-/* ---------- tarjetas ---------- */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  gap: 0.9rem;
+/* ---------- paneles · ventanas con barra superior, como la TUI ---------- */
+.pane {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 0; overflow: hidden;
 }
-.card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 1.25rem 1.3rem 1.35rem;
-  transition: transform 0.12s, border-color 0.15s;
+.pane-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 8px 12px; background: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
 }
-.card:hover { transform: translateY(-3px); border-color: var(--accent); }
-.card-label {
-  font-size: 0.68rem; letter-spacing: 0.18em; color: var(--ink-dim);
-  display: flex; align-items: center; gap: 0.5rem;
+.label {   /* título de la barra: «secuenciador · chip 8-bit» */
+  font-size: 11px; letter-spacing: .5px;
+  color: var(--muted); text-transform: lowercase;
 }
-.card h3 { margin: 0.7rem 0 0.4rem; font-size: 1.02rem; }
-.card p { color: var(--ink-dim); font-size: 0.88rem; }
-.card code { font-size: 0.8rem; }
+.pane-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }   /* chips a la derecha */
 
-/* ---------- demo: secuenciador + pantalla ---------- */
-.demo-grid {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 1rem;
-  align-items: start;
+.chip {   /* botón pequeño de preset; .active = pulsado */
+  font: inherit; font-size: 11.5px; cursor: pointer;
+  padding: 4px 10px; border-radius: 0;
+  border: 1px solid var(--border); background: transparent; color: var(--muted);
+  transition: all .2s ease; white-space: nowrap;
 }
-.seq { padding: 1.1rem 1.2rem 1.3rem; }
-.seq-head {
-  display: flex; align-items: center; gap: 1rem;
-  margin-bottom: 0.9rem; flex-wrap: wrap;
+.chip:hover { border-color: var(--accent); color: var(--text); }
+.chip.active { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+
+/* ---------- demo: secuenciador ----------
+   Rejilla de 16 pasos × 3 pistas. Cada célula es un <button>
+   que el JS pinta con .on; .now marca el paso que suena
+   (playhead). Los colores activos = teclas del OP-1. */
+.playground {   /* secuenciador a la izquierda, captura a la derecha */
+  display: grid; grid-template-columns: 1.1fr 1fr;
+  gap: 16px; align-items: stretch;
+}
+.seq-head {   /* transporte: play, bpm y contador de paso */
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 14px 16px 4px;
 }
 .seq-bpm {
-  font-size: 0.7rem; letter-spacing: 0.12em; color: var(--ink-dim);
-  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font); font-size: 11px; letter-spacing: .5px;
+  color: var(--muted); display: flex; align-items: center; gap: 8px;
 }
 .seq-bpm input {
-  width: 4.2rem; font: inherit; font-size: 0.85rem;
-  background: var(--panel); color: var(--ink);
-  border: 1px solid var(--line); border-radius: 6px;
-  padding: 0.3rem 0.5rem;
+  width: 66px; font: inherit; font-size: 13px;
+  background: var(--bg-soft); color: var(--text);
+  border: 1px solid var(--border); border-radius: 0;
+  padding: 4px 12px;
 }
-.seq-step { margin-left: auto; font-size: 0.78rem; color: var(--ink-dim); }
-.seq-grid { display: grid; gap: 6px; }
+.seq-step { margin-left: auto; font-family: var(--font); font-size: 12px; color: var(--muted); }
+.seq-grid { padding: 12px 16px 16px; display: grid; gap: 8px; }
 .seq-row {
-  display: grid;
-  grid-template-columns: 3.6rem 1fr;
-  gap: 6px; align-items: center;
+  display: grid; grid-template-columns: 58px 1fr;
+  gap: 8px; align-items: center;
 }
 .seq-name {
-  font-size: 0.62rem; letter-spacing: 0.12em; color: var(--ink-dim);
-  display: flex; align-items: center; gap: 0.4rem;
-  white-space: nowrap;
+  font-family: var(--font); font-size: 10.5px; letter-spacing: .5px;
+  color: var(--muted); display: flex; align-items: center; gap: 6px;
+  white-space: nowrap; text-transform: lowercase;
 }
 .seq-cells { display: grid; grid-template-columns: repeat(16, 1fr); gap: 4px; }
 .cell {
   aspect-ratio: 1 / 1.25;
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  background: var(--panel);
-  cursor: pointer;
-  padding: 0;
-  transition: background 0.1s, border-color 0.1s;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  background: var(--bg-soft);
+  cursor: pointer; padding: 0;
+  transition: background .12s ease, border-color .12s ease, transform .12s ease;
 }
-.cell:hover { border-color: var(--ink-dim); }
-.cell.on { border-color: transparent; }
-.cell.kick.on  { background: var(--orange); }
-.cell.pulse.on { background: var(--blue); }
-.cell.hat.on   { background: var(--green); }
-.cell.now { box-shadow: 0 0 0 1.5px var(--ink); }
-@media (max-width: 640px) {
-  .seq-cells { grid-template-columns: repeat(8, 1fr); }
-  .seq-cells .cell:nth-child(9) { grid-column: 1; }
-  .seq-row { grid-template-columns: 2.6rem 1fr; }
+.cell:hover { border-color: var(--muted); transform: translateY(-1px); }
+.cell.on { border-color: transparent; }   /* activa: solo color, sin borde */
+.cell.kick.on  { background: var(--key-orange); }   /* naranja = bombo */
+.cell.pulse.on { background: var(--key-blue); }     /* azul = pulso */
+.cell.hat.on   { background: var(--key-green); }    /* verde = hi-hat */
+.cell.now { box-shadow: 0 0 0 2px color-mix(in srgb, var(--text) 55%, transparent); }   /* anillo del paso actual */
+.screen-stage {   /* retícula de puntos detrás de la captura, papel milimetrado */
+  display: grid; place-items: center; padding: 22px;
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+.screen-stage img {
+  display: block; width: 100%; height: auto;
+  border-radius: 0; border: 1px solid var(--border);
 }
 
-/* pantalla con la captura real */
-.screen-wrap { margin: 0; }
-.screen {
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  overflow: hidden;
-  background: #121212;
-}
-.screen-bar {
-  display: flex; align-items: center; gap: 6px;
-  padding: 8px 12px;
-  background: #1d1d1d;
-  border-bottom: 1px solid #333;
-}
-.screen-bar span { width: 9px; height: 9px; border-radius: 50%; }
-.screen-bar span:nth-child(1) { background: var(--orange); }
-.screen-bar span:nth-child(2) { background: #ffb700; }
-.screen-bar span:nth-child(3) { background: var(--green); }
-.screen-bar em {
-  font-style: normal; font-size: 0.66rem; letter-spacing: 0.1em;
-  color: #9a9a9a; margin-left: 6px;
-}
-.screen img { display: block; width: 100%; height: auto; }
-.screen-wrap figcaption { margin-top: 0.6rem; text-align: center; }
-
-/* ---------- encoders ---------- */
+/* ---------- encoders · knobs giratorios ----------
+   El círculo del knob es la única curva del diseño (como el
+   hardware). La rotación se controla con la variable --ang
+   que el JS recalcula: 0% → -70° … 100% → +70°. */
+.encoders { margin-top: 22px; }
+.encoders-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+.encoders-head h3 { margin: 0; font-size: 1.05rem; letter-spacing: -.02em; font-weight: 400; }
 .knobs {
-  display: flex; gap: 2.2rem; flex-wrap: wrap;
+  display: flex; gap: 34px; flex-wrap: wrap;
   justify-content: center;
-  padding: 1.6rem 0 0.6rem;
+  padding: 26px 0 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0;
 }
 .knob-unit { text-align: center; }
-.knob {
-  width: 74px; height: 74px;
+.knob {   /* disco: degradado radial = bisel grabado; sombra inset = aro interior */
+  width: 72px; height: 72px;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 50% 42%, var(--surface) 0 58%, var(--panel) 59%);
-  border: 1px solid var(--line);
-  box-shadow: inset 0 0 0 4px var(--bg), 0 3px 10px rgb(0 0 0 / 0.08);
+    radial-gradient(circle at 50% 42%, var(--bg-soft) 0 58%, var(--card) 59%);
+  border: 1px solid var(--border);
+  box-shadow: inset 0 0 0 4px var(--bg);
   position: relative;
   cursor: ns-resize;
   touch-action: none;
-  transition: border-color 0.15s;
+  transition: border-color .15s ease;
 }
 .knob:hover, .knob:focus-visible { border-color: var(--accent); }
-.knob-tick {
+.knob-tick {   /* marca de posición: gira con --ang desde el centro */
   position: absolute; left: 50%; top: 4px;
-  width: 3px; height: 17px;
-  border-radius: 2px;
+  width: 3px; height: 16px;
+  border-radius: 0;
   background: var(--accent);
-  transform-origin: 50% 33px;      /* centro del knob */
+  transform-origin: 50% 32px;
   transform: translateX(-50%) rotate(var(--ang, -70deg));
 }
 .knob-unit label {
-  display: block; margin-top: 0.55rem;
-  font-size: 0.64rem; letter-spacing: 0.18em; color: var(--ink-dim);
+  display: block; margin-top: 8px;
+  font-family: var(--font); font-size: 10.5px;
+  letter-spacing: .5px; color: var(--muted); text-transform: lowercase;
 }
-.knob-unit output { font-size: 0.78rem; color: var(--ink); }
+.knob-unit output { font-family: var(--font); font-size: 12px; color: var(--text); }
 
-/* ---------- terminal de instalación ---------- */
-.term { overflow: hidden; }
-.term-bar {
-  display: flex; align-items: center; gap: 6px;
-  padding: 9px 13px;
-  background: var(--panel);
-  border-bottom: 1px solid var(--line);
-}
-.term-bar span { width: 9px; height: 9px; border-radius: 50%; }
-.term-bar span:nth-child(1) { background: var(--orange); }
-.term-bar span:nth-child(2) { background: #ffb700; }
-.term-bar span:nth-child(3) { background: var(--green); }
-.term-bar em {
-  font-style: normal; font-size: 0.66rem; letter-spacing: 0.1em;
-  color: var(--ink-dim); margin-left: 6px;
-}
-.term-lines { padding: 0.6rem 0.4rem 0.8rem; }
+/* ---------- terminal · comandos copiables ----------
+   Cada línea es un comando con su `$` verde y botón de copiar
+   (el JS lee data-copy). El hover ilumina la línea entera. */
+.term-lines { padding: 8px 8px 10px; }
 .term-line {
-  display: flex; align-items: center; gap: 0.7rem;
-  padding: 0.45rem 0.8rem;
-  border-radius: 8px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 10px; border-radius: 0;
 }
-.term-line:hover { background: var(--panel); }
+.term-line:hover { background: var(--bg-soft); }
 .term-line code {
-  flex: 1; background: none; padding: 0;
-  font-size: 0.84rem;
-  overflow-x: auto; white-space: nowrap;
+  flex: 1; font-family: var(--font); font-size: 13px;
+  overflow-x: auto; white-space: nowrap; padding: 0;
+  background: none; border-radius: 0;
 }
-.term-line i { font-style: normal; color: var(--green); user-select: none; }
-.copy {
-  font: inherit; font-size: 0.62rem; letter-spacing: 0.14em;
-  padding: 0.3rem 0.6rem;
-  border: 1px solid var(--line); border-radius: 6px;
-  background: transparent; color: var(--ink-dim);
-  cursor: pointer; flex: none;
-}
-.copy:hover { border-color: var(--accent); color: var(--accent); }
-.copy.done { border-color: var(--green); color: var(--green); }
+.term-line i { font-style: normal; color: var(--key-green); user-select: none; }   /* el $ en verde, no seleccionable */
 
-/* ---------- ableton ---------- */
+/* ---------- ableton · diagrama ASCII del puente ----------
+   El diagrama es un <pre>: la alineación exacta la da el mono.
+   clamp lo escala y overflow-x lo salva en pantallas chicas. */
 .bridge {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 1.4rem 1.5rem;
-  font-size: clamp(0.62rem, 2.4vw, 0.86rem);
-  line-height: 1.9;
-  overflow-x: auto;
-  white-space: pre;
+  margin: 0; padding: 18px 20px;
+  font-family: var(--font);
+  font-size: clamp(10.5px, 2.4vw, 13.5px);
+  line-height: 1.9; overflow-x: auto; white-space: pre;
 }
-.b-orange { color: var(--orange); font-weight: 700; }
-.b-white  { color: var(--ink); font-weight: 700; }
+.b-accent { color: var(--accent); font-weight: 700; }
+.b-strong { color: var(--text); font-weight: 700; }
 .bridge-steps {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  gap: 0.7rem;
-  margin-top: 1rem;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px; margin-top: 14px;
 }
 .bridge-steps div {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0.8rem 1rem;
-  font-size: 0.84rem; color: var(--ink-dim);
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 12px 16px;
+  font-size: 13.5px; color: var(--muted);
+  transition: border-color .2s ease;
 }
-.bridge-steps b { color: var(--accent); }
+.bridge-steps div:hover { border-color: var(--accent); }
+.bridge-steps b { color: var(--accent); font-family: var(--font); }   /* numeración 1. 2. 3. 4. en carmesí */
 
-/* ---------- footer ---------- */
-.foot {
-  border-top: 1px solid var(--line);
-  padding: 2.2rem 1.4rem 2.8rem;
-  text-align: center;
-  color: var(--ink-dim);
-  font-size: 0.8rem;
+/* ---------- footer · cierre centrado con regla ---------- */
+.footer { border-top: 1px solid var(--border); padding: 52px 24px 64px; text-align: center; }
+.foot-main { margin: 0; font-size: 15px; }
+.foot-main .heart { color: var(--accent); }
+.foot-links { margin: 14px 0 0; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.foot-links a {
+  font-family: var(--font); font-size: 13px;
+  color: var(--muted); text-decoration: none;
+  border-bottom: 1px solid var(--border); padding-bottom: 2px;
+  transition: color .2s ease, border-color .2s ease;
 }
-.foot-brand {
-  font-weight: 700; letter-spacing: 0.08em; color: var(--ink);
-  display: inline-flex; align-items: center; gap: 0.5rem;
-}
-.foot-brand em { font-style: normal; font-weight: 400; color: var(--ink-dim); }
-.foot p { margin-top: 0.8rem; }
-.foot-links a { color: var(--accent); text-decoration: underline; }
+.foot-links a:hover { color: var(--accent); border-color: var(--accent); }
 
-/* ---------- reveal on scroll ---------- */
-.reveal {
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+/* ---------- toast · aviso efímero centrado abajo ----------
+   El JS añade .show un frame después de insertarlo para que
+   la transición corra; se autodestruye a los ~2.2 s. */
+.toast {
+  position: fixed; left: 50%; bottom: 28px; z-index: 100;
+  transform: translate(-50%, 16px); opacity: 0;
+  background: var(--text); color: var(--bg);
+  padding: 10px 18px; border-radius: 0; font-size: 13.5px;
+  pointer-events: none; transition: opacity .25s ease, transform .25s ease;
 }
-.reveal.in { opacity: 1; transform: none; }
+.toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+/* ---------- responsive · dos quiebres, tablet y móvil ---------- */
+@media (max-width: 900px) {   /* tablet: columnas apiladas */
+  .playground { grid-template-columns: 1fr; }   /* secuenciador y captura en vertical */
+  .hero { padding-top: 64px; }
+  .knobs { gap: 22px; }
+}
+@media (max-width: 640px) {   /* móvil: la rejilla pasa a 8×2 */
+  .nav { display: none; }   /* sin sitio para el menú: solo marca + GitHub */
+  .section-head { flex-direction: column; gap: 10px; }
+  .seq-row { grid-template-columns: 44px 1fr; }
+  .seq-cells { grid-template-columns: repeat(8, 1fr); }   /* 8 columnas → 2 filas */
+  .seq-cells .cell:nth-child(9) { grid-column: 1; }   /* el paso 9 empieza fila nueva */
+  .knob { width: 60px; height: 60px; }   /* knobs más pequeños */
+  .knob-tick { transform-origin: 50% 26px; height: 13px; }   /* el pivote sigue al nuevo radio */
+  .topbar-inner { gap: 10px; }
+}
+
+/* ---------- movimiento reducido · accesibilidad ----------
+   Quien pide menos animación al SO no ve parpadeos,
+   transiciones ni scroll suave. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1; transform: none; transition: none; }
-  .led-strip span { animation: none; opacity: 0.7; }
-  .pulse-dot { animation: none; }
-}
-
-/* ---------- responsive ---------- */
-@media (max-width: 900px) {
-  .demo-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 760px) {
-  .nav { display: none; }
-  .hero { padding-top: 3.4rem; }
-  .top { gap: 0.7rem; }
-  .knobs { gap: 1.3rem; }
-  .knob { width: 62px; height: 62px; }
-  .knob-tick { transform-origin: 50% 27px; height: 14px; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
 }

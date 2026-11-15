@@ -1,236 +1,237 @@
 <!doctype html>
-<html lang="es" data-theme="auto">
+<!--
+  OC-1 STUDIO · landing
+  HTML estático: sin build, sin frameworks. Todo el contenido
+  visible vive aquí; el JS solo añade tarjetas, la demo del
+  secuenciador y los encoders. El tema lo decide el sistema.
+-->
+<html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OC-1 STUDIO — el estudio de música que vive en tu terminal</title>
-<meta name="description" content="Secuenciador estilo Teenage Engineering en la terminal: temas dinámicos claro/oscuro, Ableton Live vía Max for Live, sonido chiptune 8-bit, Strudel y demos .py versionados con git. Solo Python.">
-<meta name="color-scheme" content="light dark">
-<meta property="og:title" content="OC-1 STUDIO">
-<meta property="og:description" content="El estudio de música que vive en tu terminal. Hecho con GLM-5.3-Flash-Free y OpenCode.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23121212'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23ff5300'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- título + descripción: lo que muestran buscadores y redes -->
+  <title>OC-1 STUDIO · la terminal es tu nuevo instrumento</title>
+  <meta name="description" content="Estudio de música minimalista industrial en la terminal: secuenciador de 16 pasos, encoders, chiptune 8-bit, Ableton vía Max for Live y demos .py versionados con git. Solo Python, solo HTML/CSS/JS aquí.">
+  <!-- tema claro/oscuro lo decide el SO: no hay selector -->
+  <meta name="color-scheme" content="light dark">
+  <!-- color de la barra del navegador según el esquema activo -->
+  <meta name="theme-color" content="#f2f2ef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#101112" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="OC-1 STUDIO">
+  <meta property="og:description" content="La terminal es tu nuevo instrumento. Hecho con GLM-5.3-Flash-Free y OpenCode.">
+  <!-- favicon inline (data URI): el cursor >_ en carmesí, sin archivo extra -->
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="4" y="74" font-size="56" font-family="monospace" font-weight="bold" fill="%23dc143c">&gt;_</text></svg>'>
+  <!-- tipografía: UNA sola fuente (JetBrains Mono) para toda la
+       página; preconnect acelera la descarga de los .woff2 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- defer: el JS corre cuando el DOM ya está listo -->
+  <script defer src="script.js"></script>
 </head>
 <body>
 
-<header class="top">
-  <a class="brand" href="#top">
-    <span class="dot dot-orange pulse-dot"></span>OC-1&nbsp;STUDIO
-  </a>
-  <nav class="nav">
-    <a href="#caracteristicas">CARACTERÍSTICAS</a>
-    <a href="#demo">DEMO</a>
-    <a href="#instalar">INSTALAR</a>
-    <a href="#ableton">ABLETON</a>
-  </nav>
-  <div class="top-actions">
-    <a class="btn btn-ghost btn-sm" href="https://github.com/Lott-Campuzano/oc1-studio" target="_blank" rel="noopener">GITHUB ↗</a>
-    <button id="theme-btn" class="theme-btn" title="apariencia: sigue al sistema">
-      <span class="dot dot-green"></span><span id="theme-label">AUTO</span>
-    </button>
+<!-- ══════════ Topbar · fija arriba: marca con cursor parpadeante,
+     navegación por anclas y enlace al repo ══════════ -->
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" href="#top">OC-1&nbsp;STUDIO<span aria-hidden="true">_</span></a>
+    <nav class="nav" aria-label="Secciones">
+      <a href="#caracteristicas" data-section="caracteristicas">Características</a>
+      <a href="#demo" data-section="demo">Demo</a>
+      <a href="#instalar" data-section="instalar">Instalar</a>
+      <a href="#ableton" data-section="ableton">Ableton</a>
+    </nav>
+    <div class="topbar-actions">
+      <a class="btn small ghost" href="https://github.com/Lott-Campuzano/oc1-studio" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
   </div>
 </header>
 
 <main id="top">
 
-  <!-- ============ HERO ============ -->
-  <section class="hero">
-    <p class="kicker reveal">
-      <span class="dot dot-blue"></span>SECUENCIADOR · STRUDEL · ABLETON · CHIPTUNE
+  <!-- ══════════ Portada · promesa + CTAs + teclas del OP-1 ══════════ -->
+  <section class="hero container">
+    <p class="kicker"><span class="dot"></span>secuenciador · strudel · ableton · chiptune</p>
+    <h1>La terminal es tu <em>nuevo instrumento</em></h1>
+    <p class="lead">
+      OC-1 STUDIO es un estudio de música con estética Teenage Engineering y
+      Arturia que vive en tu terminal: secuenciador de 16 pasos, encoders que
+      se giran, sonido de computadora vieja y tus demos como archivos
+      <b>.py</b> versionados con git. Hecho con IA — la música la pones tú.
     </p>
-    <h1 class="reveal">EL ESTUDIO DE MÚSICA<br>QUE VIVE EN TU <span class="hl">TERMINAL</span></h1>
-    <p class="sub reveal">
-      Estética Teenage Engineering, temas que siguen a tu sistema, sonidos de
-      computadora vieja y tus demos como archivos <b>.py</b> versionados con git.
-      Hecho con IA — la música la pones tú.
-    </p>
-    <div class="cta reveal">
-      <a class="btn btn-orange" href="#instalar">▶ EMPEZAR EN 2 MIN</a>
-      <a class="btn btn-ghost" href="https://github.com/Lott-Campuzano/oc1-studio" target="_blank" rel="noopener">⧉ VER CÓDIGO</a>
+    <div class="hero-actions">
+      <a class="btn" href="#demo">▶ Probar el demo ↓</a>
+      <a class="btn ghost" href="https://github.com/Lott-Campuzano/oc1-studio" target="_blank" rel="noopener">⧉ Ver código</a>
     </div>
 
-    <!-- tira de 16 pasos, animada en CSS puro -->
-    <div class="led-strip reveal" aria-hidden="true">
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-    </div>
-
-    <div class="color-keys reveal" aria-hidden="true">
-      <span class="key key-orange">syn</span>
-      <span class="key key-blue">drum</span>
-      <span class="key key-green">tape</span>
-      <span class="key key-white">seq</span>
+    <!-- las cuatro teclas del OP-1 -->
+    <div class="color-keys" aria-hidden="true">
+      <span class="key"><i class="dot dot-orange"></i>syn</span>
+      <span class="key"><i class="dot dot-blue"></i>drum</span>
+      <span class="key"><i class="dot dot-green"></i>tape</span>
+      <span class="key"><i class="dot dot-white"></i>seq</span>
     </div>
   </section>
 
-  <!-- ============ CARACTERÍSTICAS ============ -->
-  <section id="caracteristicas" class="section">
-    <h2 class="section-title reveal"><span class="dot dot-orange"></span>CARACTERÍSTICAS</h2>
-    <div class="cards">
-      <article class="card reveal">
-        <p class="card-label"><span class="dot dot-blue"></span>TEMAS DINÁMICOS</p>
-        <h3>Sigue a tu sistema</h3>
-        <p>Modo claro y oscuro con sondeo cada 5 s: si tu sistema cambia, el
-        estudio cambia. Cuatro acentos TE: naranja, azul, verde, blanco.</p>
-      </article>
-      <article class="card reveal">
-        <p class="card-label"><span class="dot dot-orange"></span>ABLETON LIVE</p>
-        <h3>Puente Max for Live</h3>
-        <p>Notas → MIDI por UDP y reloj de 16avos sincronizado con el transporte
-        de Live. OC-1 secuencia; tus instrumentos de Ableton suenan.</p>
-      </article>
-      <article class="card reveal">
-        <p class="card-label"><span class="dot dot-green"></span>CHIPTUNE</p>
-        <h3>Computadora vieja</h3>
-        <p>Pulsos con duty del 25 %, ruido de 1 bit, reloj decimado a ~7 kHz y
-        eco tipo Game Boy. En Strudel: <code>.coarse(8).crush(4)</code>.</p>
-      </article>
-      <article class="card reveal">
-        <p class="card-label"><span class="dot dot-white"></span>STRUDEL</p>
-        <h3>Live-coding embebido</h3>
-        <p>Tu demo se abre en strudel.cc ya cargado, o en un player local con
-        editor y REPL — todo desde la misma TUI.</p>
-      </article>
-      <article class="card reveal">
-        <p class="card-label"><span class="dot dot-orange"></span>DEMOS .PY</p>
-        <h3>Tu proyecto es texto</h3>
-        <p>Cada canción es un archivo Python editable: lo abres, lo lees, lo
-        cambias, lo versionas. Sin formatos cerrados.</p>
-      </article>
-      <article class="card reveal">
-        <p class="card-label"><span class="dot dot-blue"></span>GIT</p>
-        <h3>Historial infinito</h3>
-        <p>init · clone · commit · push · pull desde la interfaz, con auto-commit
-        al guardar. Tu backup es GitHub.</p>
-      </article>
-    </div>
+  <!-- ══════════ 01 · Características ══════════ -->
+  <section id="caracteristicas" class="section container">
+    <header class="section-head">
+      <span class="num">01</span>
+      <div>
+        <h2>Características</h2>
+        <p class="lead">Seis ideas que hacen de OC-1 un estudio de verdad.</p>
+      </div>
+    </header>
+    <!-- las tarjetas-módulo las construye el JS a partir de FEATURES -->
+    <div class="cards" id="cards"></div>
   </section>
 
-  <!-- ============ DEMO ============ -->
-  <section id="demo" class="section">
-    <h2 class="section-title reveal"><span class="dot dot-green"></span>DEMO EN VIVO</h2>
-    <p class="section-sub reveal">Un secuenciador de 16 pasos como el de OC-1, corriendo en tu
-    navegador con WebAudio (ondas cuadradas, cero muestras). Toca las casillas.</p>
+  <!-- ══════════ 02 · Demo ══════════ -->
+  <section id="demo" class="section container">
+    <header class="section-head">
+      <span class="num">02</span>
+      <div>
+        <h2>Demo · el secuenciador</h2>
+        <p class="lead">Un secuenciador de 16 pasos como el de OC-1, sonando con síntesis del navegador. Toca las casillas.</p>
+      </div>
+    </header>
 
-    <div class="demo-grid">
-      <div class="seq panel reveal" id="seq">
+    <!-- dos paneles: secuenciador funcional (izq) y captura de la TUI (der) -->
+    <div class="playground">
+      <div class="pane">
+        <div class="pane-head">
+          <span class="label">secuenciador · chip 8-bit</span>
+          <div class="pane-actions" id="seq-presets"></div>
+        </div>
         <div class="seq-head">
-          <button id="seq-play" class="btn btn-orange btn-sm" aria-pressed="false">▶ PLAY</button>
-          <label class="seq-bpm">BPM
+          <button id="seq-play" class="btn small" type="button" aria-pressed="false">▶ Play</button>
+          <label class="seq-bpm" for="seq-bpm">bpm
             <input id="seq-bpm" type="number" min="60" max="220" value="140">
           </label>
           <span class="seq-step" id="seq-step">--/16</span>
         </div>
-        <div class="seq-grid" id="seq-grid"><!-- filas generadas en JS --></div>
-        <p class="hint">haz clic en las casillas · ESCUCHA: activa el sonido de tu navegador</p>
+        <div class="seq-grid" id="seq-grid"></div>
       </div>
 
-      <figure class="screen-wrap reveal">
-        <div class="screen">
-          <div class="screen-bar"><span></span><span></span><span></span><em>oc1studio — terminal</em></div>
+      <div class="pane">
+        <div class="pane-head">
+          <span class="label">captura real · la TUI</span>
+          <a class="icon-btn" href="https://github.com/Lott-Campuzano/oc1-studio" target="_blank" rel="noopener" title="Ver el proyecto">↗</a>
+        </div>
+        <div class="screen-stage">
           <img src="assets/captura-tui.svg" alt="Captura real de la TUI de OC-1 STUDIO" loading="lazy">
         </div>
-        <figcaption class="hint">la TUI real · exportada desde la app · teclas: ESPACIO ▶ · V ableton · G git</figcaption>
-      </figure>
+      </div>
     </div>
-  </section>
 
-  <!-- ============ ENCODERS ============ -->
-  <section class="section section-enc">
-    <h2 class="section-title reveal"><span class="dot dot-white"></span>ENCODERS</h2>
-    <p class="section-sub reveal">Gíralos con la rueda, arrastrando o con ←/→. VOL controla de
-    verdad el volumen del demo de arriba.</p>
-    <div class="knobs reveal">
-      <div class="knob-unit" data-knob="reverb">
-        <div class="knob" tabindex="0" role="slider" aria-label="reverb" aria-valuemin="0" aria-valuemax="100" aria-valuenow="18">
-          <span class="knob-tick"></span>
-        </div>
-        <label>REVERB</label><output>18%</output>
+    <!-- encoders: cada .knob-unit lleva su valor inicial en aria-valuenow,
+         que el JS lee como estado; el VOL controla el volumen real -->
+    <div id="encoders" class="encoders">
+      <div class="encoders-head">
+        <h3>Encoders</h3>
+        <p class="hint">gíralos con la rueda, arrastrando o con ←/→ · el VOL controla de verdad el demo</p>
       </div>
-      <div class="knob-unit" data-knob="delay">
-        <div class="knob" tabindex="0" role="slider" aria-label="delay" aria-valuemin="0" aria-valuemax="100" aria-valuenow="22">
-          <span class="knob-tick"></span>
+      <div class="knobs">
+        <div class="knob-unit" data-knob="reverb">
+          <div class="knob" tabindex="0" role="slider" aria-label="reverb" aria-valuemin="0" aria-valuemax="100" aria-valuenow="18"><span class="knob-tick"></span></div>
+          <label>reverb</label><output>18%</output>
         </div>
-        <label>DELAY</label><output>22%</output>
-      </div>
-      <div class="knob-unit" data-knob="drive">
-        <div class="knob" tabindex="0" role="slider" aria-label="drive" aria-valuemin="0" aria-valuemax="100" aria-valuenow="15">
-          <span class="knob-tick"></span>
+        <div class="knob-unit" data-knob="delay">
+          <div class="knob" tabindex="0" role="slider" aria-label="delay" aria-valuemin="0" aria-valuemax="100" aria-valuenow="22"><span class="knob-tick"></span></div>
+          <label>delay</label><output>22%</output>
         </div>
-        <label>DRIVE</label><output>15%</output>
-      </div>
-      <div class="knob-unit" data-knob="vol">
-        <div class="knob" tabindex="0" role="slider" aria-label="volumen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="90">
-          <span class="knob-tick"></span>
+        <div class="knob-unit" data-knob="drive">
+          <div class="knob" tabindex="0" role="slider" aria-label="drive" aria-valuemin="0" aria-valuemax="100" aria-valuenow="15"><span class="knob-tick"></span></div>
+          <label>drive</label><output>15%</output>
         </div>
-        <label>VOL</label><output>90%</output>
+        <div class="knob-unit" data-knob="vol">
+          <div class="knob" tabindex="0" role="slider" aria-label="volumen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="90"><span class="knob-tick"></span></div>
+          <label>vol</label><output>90%</output>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ INSTALAR ============ -->
-  <section id="instalar" class="section">
-    <h2 class="section-title reveal"><span class="dot dot-orange"></span>INSTALAR</h2>
-    <p class="section-sub reveal">Pega estas líneas en tu Terminal (macOS/Linux) o PowerShell
-    (Windows). Requisito único: <b>Python 3.10+</b>.</p>
+  <!-- ══════════ 03 · Instalar · comandos copiables (data-copy) ══════════ -->
+  <section id="instalar" class="section container">
+    <header class="section-head">
+      <span class="num">03</span>
+      <div>
+        <h2>Instalar · dos minutos</h2>
+        <p class="lead">Pega estas líneas en tu Terminal (macOS/Linux) o PowerShell (Windows). Requisito único: <b>Python 3.10+</b>.</p>
+      </div>
+    </header>
 
-    <div class="term panel reveal">
-      <div class="term-bar"><span></span><span></span><span></span><em>terminal</em></div>
+    <div class="pane">
+      <div class="pane-head">
+        <span class="label">terminal · copia y pega</span>
+      </div>
       <div class="term-lines">
         <div class="term-line">
           <code><i>$</i> git clone https://github.com/Lott-Campuzano/oc1-studio.git</code>
-          <button class="copy" data-copy="git clone https://github.com/Lott-Campuzano/oc1-studio.git">COPIAR</button>
+          <button class="icon-btn" type="button" data-copy="git clone https://github.com/Lott-Campuzano/oc1-studio.git" title="Copiar">⧉</button>
         </div>
         <div class="term-line">
           <code><i>$</i> cd oc1-studio</code>
-          <button class="copy" data-copy="cd oc1-studio">COPIAR</button>
+          <button class="icon-btn" type="button" data-copy="cd oc1-studio" title="Copiar">⧉</button>
         </div>
         <div class="term-line">
           <code><i>$</i> python3 -m venv .venv &amp;&amp; .venv/bin/pip install -e .</code>
-          <button class="copy" data-copy="python3 -m venv .venv &amp;&amp; .venv/bin/pip install -e .">COPIAR</button>
+          <button class="icon-btn" type="button" data-copy="python3 -m venv .venv && .venv/bin/pip install -e ." title="Copiar">⧉</button>
         </div>
         <div class="term-line">
           <code><i>$</i> .venv/bin/oc1studio</code>
-          <button class="copy" data-copy=".venv/bin/oc1studio">COPIAR</button>
+          <button class="icon-btn" type="button" data-copy=".venv/bin/oc1studio" title="Copiar">⧉</button>
         </div>
       </div>
     </div>
-    <p class="hint center reveal">dentro de la app: <b>ESPACIO</b> suena el demo · <b>T</b> presets ·
-    <b>C</b> color · <b>V</b> ableton · <b>G</b> git · <b>O</b> ajustes · <b>Q</b> salir<br>
-    ¿nunca has usado la terminal? lee la
-    <a href="https://github.com/Lott-Campuzano/oc1-studio/blob/main/docs/GUIA-PRINCIPIANTES.md" target="_blank" rel="noopener">guía para principiantes</a>.</p>
+    <p class="hint center">
+      dentro de la app: <b>ESPACIO</b> suena el demo · <b>T</b> presets · <b>C</b> color ·
+      <b>V</b> ableton · <b>G</b> git · <b>O</b> ajustes · <b>Q</b> salir<br>
+      ¿nunca has tocado una terminal? lee la
+      <a href="https://github.com/Lott-Campuzano/oc1-studio/blob/main/docs/GUIA-PRINCIPIANTES.md" target="_blank" rel="noopener">guía para principiantes</a>.
+    </p>
   </section>
 
-  <!-- ============ ABLETON ============ -->
-  <section id="ableton" class="section">
-    <h2 class="section-title reveal"><span class="dot dot-blue"></span>ABLETON + MAX FOR LIVE</h2>
-    <p class="section-sub reveal">OC-1 es el secuenciador; Ableton es el sonido. Se hablan por
-    dentro de tu máquina — sin nube, sin servidores.</p>
-    <pre class="bridge reveal"><span class="b-orange">OC-1 STUDIO</span> ──UDP:7647──▶ <span class="b-white">Max for Live</span> ──▶ midiout ──▶ Ableton
+  <!-- ══════════ 04 · Ableton · diagrama del puente UDP + pasos ══════════ -->
+  <section id="ableton" class="section container">
+    <header class="section-head">
+      <span class="num">04</span>
+      <div>
+        <h2>Ableton + Max for Live</h2>
+        <p class="lead">OC-1 secuencia; Ableton suena. Se hablan por dentro de tu máquina — sin nube, sin servidores.</p>
+      </div>
+    </header>
+
+    <div class="pane">
+      <div class="pane-head"><span class="label">puente · protocolo udp</span></div>
+      <pre class="bridge"><span class="b-accent">OC-1 STUDIO</span> ──udp:7647──▶ <span class="b-strong">Max for Live</span> ──▶ midiout ──▶ Ableton
      ▲                          │ transport
-     └────UDP:7648 reloj 1/16 ◀─┘ sincronizado con el play de Live</pre>
-    <div class="bridge-steps reveal">
+     └────udp:7648 · reloj 1/16 ◀┘ sincronizado con el play de Live</pre>
+    </div>
+    <div class="bridge-steps">
       <div><b>1.</b> pista MIDI en Ableton → Max MIDI Effect</div>
       <div><b>2.</b> pega <code>max/oc1-studio-bridge.maxpat</code> en el patcher</div>
-      <div><b>3.</b> en OC-1 pulsa <b>V</b> (LIVE)</div>
+      <div><b>3.</b> en OC-1 pulsa <b>V</b> · aparece LIVE en verde</div>
       <div><b>4.</b> play en Ableton → tus instrumentos suenan el patrón</div>
     </div>
   </section>
 
 </main>
 
-<footer class="foot">
-  <div class="foot-brand"><span class="dot dot-orange"></span>OC-1 STUDIO <em>v0.2.0 · MIT</em></div>
-  <p>hecho con <b>GLM-5.3-Flash-Free</b> y <b>OpenCode</b> — código, docs y esta página por IA · la música la pones tú 🎛️</p>
-  <p class="foot-links">
-    <a href="https://github.com/Lott-Campuzano/oc1-studio" target="_blank" rel="noopener">repo</a> ·
-    <a href="https://github.com/Lott-Campuzano/oc1-studio/issues" target="_blank" rel="noopener">issues</a> ·
-    <a href="https://github.com/Lott-Campuzano/oc1-studio-landing" target="_blank" rel="noopener">esta landing</a>
-  </p>
+<!-- ══════════ Footer · créditos y enlaces ══════════ -->
+<footer class="footer">
+  <div class="container">
+    <p class="foot-main">Hecho con amor por <strong>Lott Campuzano</strong>, <strong>GLM-5.3-Flash-Free</strong> y <strong>OpenCode</strong><span class="heart" aria-hidden="true"> ♥</span></p>
+    <p class="foot-links">
+      <a href="https://github.com/Lott-Campuzano/oc1-studio" target="_blank" rel="noopener">el estudio ↗</a>
+      <a href="https://github.com/Lott-Campuzano/oc1-studio/issues" target="_blank" rel="noopener">issues ↗</a>
+      <a href="https://github.com/Lott-Campuzano/oc1-studio-landing" target="_blank" rel="noopener">esta landing ↗</a>
+    </p>
+  </div>
 </footer>
 
-<script src="script.js"></script>
 </body>
 </html>
