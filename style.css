@@ -8,9 +8,12 @@
    y superficies planas sin sombras.
    ═══════════════════════════════════════════════════════ */
 
+/* ── tokens de diseño ────────────────────────────────────────
+   Toda la identidad vive en estas variables. El resto del
+   archivo solo las consume: cambiar aquí cambia la página. */
 :root {
-  --accent: #dc143c;              /* rojo carmesí */
-  --on-accent: #ffffff;
+  --accent: #dc143c;              /* rojo carmesí · fijo, como el hardware */
+  --on-accent: #ffffff;           /* texto que va sobre el acento */
 
   /* claro — blanco hueso frío + carbón */
   --bg: #f2f2ef;
@@ -26,11 +29,16 @@
   --key-green: #00d26a;
   --key-white: #f0f0f0;
 
-  --size: 16px;
+  /* una sola fuente para absolutamente todo (marca, titulares,
+     cuerpo, código) — el monoespaciado ES la identidad,
+     como en arturia.com y opencode.ai */
+  --size: 16px;                   /* tamaño base tipográfico */
   --font: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  color-scheme: light;
+  color-scheme: light;            /* esquema claro por defecto */
 }
 
+/* el tema oscuro no se elige: lo decide el sistema.
+   @media lee el esquema del SO y :root reasigna los tokens */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #101112;                  /* negro carbón */
@@ -43,10 +51,10 @@
   }
 }
 
-/* ---------- base ---------- */
-* { box-sizing: border-box; }
-[hidden] { display: none !important; }
-html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+/* ---------- base · reset mínimo y tipografía global ---------- */
+* { box-sizing: border-box; }                     /* los bordes no ensanchan las cajas */
+[hidden] { display: none !important; }            /* el atributo hidden siempre gana */
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }   /* anclas no quedan bajo la topbar fija */
 body {
   margin: 0;
   background: var(--bg);
@@ -58,25 +66,30 @@ body {
   text-rendering: optimizeLegibility;
   transition: background .25s ease, color .25s ease;
 }
-::selection { background: color-mix(in srgb, var(--accent) 26%, transparent); }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 0; }
-input[type='range'], input[type='checkbox'], input[type='color'], input[type='number'] { accent-color: var(--accent); }
+::selection { background: color-mix(in srgb, var(--accent) 26%, transparent); }   /* selección en carmesí translúcido */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 0; }   /* foco visible para teclado */
+input[type='range'], input[type='checkbox'], input[type='color'], input[type='number'] { accent-color: var(--accent); }   /* controles nativos teñidos */
 /* una sola fuente en toda la página: JetBrains Mono.
    Titulares en peso 400 con tracking apretado, como opencode.ai */
 h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
 
-.container { max-width: 1080px; margin-inline: auto; padding-inline: 24px; }
+.container { max-width: 1080px; margin-inline: auto; padding-inline: 24px; }   /* ancho de lectura + aire lateral */
 
+/* puntos LED de 9px que marcan pista o estado: comparten forma,
+   cambia solo el color (las teclas del OP-1) */
 .dot {
-  width: 9px; height: 9px; border-radius: 50%;
+  width: 9px; height: 9px; border-radius: 50%;    /* única curva pequeña permitida */
   display: inline-block; flex: none;
 }
-.dot-orange { background: var(--key-orange); }
-.dot-blue   { background: var(--key-blue); }
-.dot-green  { background: var(--key-green); }
-.dot-white  { background: var(--key-white); box-shadow: 0 0 0 1px var(--border); }
+.dot-orange { background: var(--key-orange); }    /* kick */
+.dot-blue   { background: var(--key-blue); }      /* pulse */
+.dot-green  { background: var(--key-green); }     /* hat */
+.dot-white  { background: var(--key-white); box-shadow: 0 0 0 1px var(--border); }   /* seq · anillo para verla sobre claro */
 
-/* ---------- botones ---------- */
+/* ---------- botones · rectangulares, placa de hardware ----------
+   .btn       acción primaria: relleno carmesí, texto blanco
+   .btn.ghost acción secundaria: transparente con borde
+   .btn.small versión compacta para la topbar                */
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
   border: 0; cursor: pointer; font: inherit; font-size: 14px;
@@ -90,6 +103,7 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
 .btn.ghost:hover { border-color: var(--accent); filter: none; }
 .btn.small { padding: 6px 13px; font-size: 12.5px; }
 
+/* botón cuadrado de icono: copiar ⧉, cerrar ✕, ↗ … */
 .icon-btn {
   width: 28px; height: 28px; display: inline-grid; place-items: center;
   border: 1px solid var(--border); border-radius: 0;
@@ -100,7 +114,7 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
 }
 .icon-btn:hover { color: var(--accent); border-color: var(--accent); }
 
-/* ---------- topbar ---------- */
+/* ---------- topbar · fija arriba, translúcida con blur ---------- */
 .topbar {
   position: sticky; top: 0; z-index: 50;
   background: color-mix(in srgb, var(--bg) 82%, transparent);
@@ -114,42 +128,44 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
   font-weight: 700; font-size: 16.5px; letter-spacing: -.02em;
   color: var(--text); text-decoration: none; white-space: nowrap;
 }
+/* el guion bajo `_` de la marca parpadea: cursor de terminal vivo */
 .brand span { color: var(--accent); animation: blink 1.2s steps(2, start) infinite; }
-@keyframes blink { to { visibility: hidden; } }
-.nav { display: flex; gap: 2px; margin-inline: auto; }
+@keyframes blink { to { visibility: hidden; } }        /* el cursor desaparece a saltos, como un caret */
+.nav { display: flex; gap: 2px; margin-inline: auto; }   /* centrada: margin auto a ambos lados */
 .nav a {
   padding: 6px 12px; border-radius: 0; text-decoration: none;
   color: var(--muted); font-size: 13.5px;
   transition: color .2s ease, background .2s ease;
 }
 .nav a:hover { color: var(--text); }
-.nav a.active {
+.nav a.active {   /* sección visible: lo marca el JS con IntersectionObserver */
   color: var(--text);
   background: color-mix(in srgb, var(--accent) 14%, transparent);
 }
 .topbar-actions { display: flex; gap: 8px; align-items: center; }
 
 /* ---------- portada ---------- */
-.hero { padding: 92px 24px 64px; }
-.kicker {
+.hero { padding: 92px 24px 64px; }    /* mucho aire arriba: primera impresión */
+.kicker {   /* línea pequeña sobre el titular, estilo serigrafía */
   display: flex; align-items: center; gap: 8px;
   font-family: var(--font); font-size: 12px; letter-spacing: .5px;
   color: var(--muted); text-transform: lowercase;
 }
-.kicker .dot { background: var(--accent); animation: dotpulse 1.6s ease-in-out infinite; }
+.kicker .dot { background: var(--accent); animation: dotpulse 1.6s ease-in-out infinite; }   /* LED respirando */
 @keyframes dotpulse { 50% { opacity: .35; } }
-.hero h1 {
+.hero h1 {   /* titular: peso 400 + tracking -.03em, como opencode.ai;
+                clamp escala de móvil a escritorio sin media queries */
   margin: 14px 0 0;
   font-size: clamp(2.1rem, 4.8vw, 3.5rem);
   line-height: 1.05; letter-spacing: -.03em; font-weight: 400;
   max-width: 22ch;
 }
-.hero h1 em { font-style: italic; color: var(--accent); }
-.lead { color: var(--muted); max-width: 62ch; margin: 16px 0 0; }
-.lead b { color: var(--text); }
-.hero-actions { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+.hero h1 em { font-style: italic; color: var(--accent); }    /* «nuevo instrumento» resaltado */
+.lead { color: var(--muted); max-width: 62ch; margin: 16px 0 0; }   /* 62ch: medida óptima de lectura */
+.lead b { color: var(--text); }     /* las negritas dentro del lead suben a tinta */
+.hero-actions { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }   /* CTAs dobles */
 
-/* las cuatro teclas del OP-1 */
+/* las cuatro teclas del OP-1 · chips decorativos con su LED */
 .color-keys {
   display: flex; gap: 10px; justify-content: center;
   margin-top: 36px; flex-wrap: wrap;
@@ -164,50 +180,53 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
 }
 .key:hover { border-color: var(--accent); color: var(--text); }
 
-/* ---------- secciones ---------- */
-.section { border-top: 1px solid var(--border); padding: 76px 24px; }
+/* ---------- secciones · separadas por regla horizontal, numeradas ---------- */
+.section { border-top: 1px solid var(--border); padding: 76px 24px; }   /* cada bloque empieza con su línea */
 .section-head { display: flex; gap: 18px; align-items: flex-start; margin-bottom: 28px; }
-.num {
+.num {   /* badge 01/02/03/04 en carmesí — índice de módulo */
   font-size: 13px; color: var(--accent);
   border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
   border-radius: 0; padding: 3px 11px; height: fit-content; margin-top: 6px;
 }
-.section h2 { margin: 6px 0 0; font-size: 1.5rem; letter-spacing: -.03em; font-weight: 400; }
+.section h2 { margin: 6px 0 0; font-size: 1.5rem; letter-spacing: -.03em; font-weight: 400; }   /* titular de sección, mono regular */
 .section .lead { margin-top: 8px; }
-.hint { font-size: 12px; color: var(--muted); font-family: var(--font); }
+.hint { font-size: 12px; color: var(--muted); font-family: var(--font); }   /* letra pequeña tipo manual */
 .hint.center { text-align: center; margin-top: 14px; }
 .hint a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
 
-/* ---------- tarjetas · módulos planos tipo panel de hardware ---------- */
-.cards {
+/* ---------- tarjetas · módulos planos tipo panel de hardware ----------
+   Cada tarjeta es un módulo de rack: borde duro, franja de cabecera
+   con número de módulo, descripción y bloque de código enmarcado.
+   Sin sombra ni levantamiento: el hover solo tiñe el borde. */
+.cards {   /* rejilla automática: columnas de ≥300px que caben */
   display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 14px;
 }
-.card {
+.card {   /* columna flex: cabecera arriba, pre pegado abajo */
   display: flex; flex-direction: column;
   background: var(--card); border: 1px solid var(--border);
   transition: border-color .15s ease, background .15s ease;
 }
-.card:hover { border-color: var(--accent); }
-.card-head {
+.card:hover { border-color: var(--accent); }   /* feedback seco, sin movimiento */
+.card-head {   /* franja superior tipo serigrafía */
   display: flex; align-items: center; gap: 10px;
   padding: 7px 12px;
   background: var(--bg-soft);
   border-bottom: 1px solid var(--border);
 }
-.card-num {
+.card-num {   /* 01…06 — lo escribe el JS con padStart */
   font-family: var(--font); font-size: 10.5px; letter-spacing: 1px;
   color: var(--accent); flex: none;
 }
-.card h4 { margin: 0; font-size: 12.5px; font-weight: 600; letter-spacing: .2px; }
-.card p { margin: 0; padding: 12px 14px 4px; font-size: 13.5px; color: var(--muted); flex: 1; }
-.card pre {
+.card h4 { margin: 0; font-size: 12.5px; font-weight: 600; letter-spacing: .2px; }   /* etiqueta de módulo, no titular */
+.card p { margin: 0; padding: 12px 14px 4px; font-size: 13.5px; color: var(--muted); flex: 1; }   /* flex:1 empuja el pre abajo */
+.card pre {   /* comando de ejemplo, enmarcado */
   margin: 10px 14px 14px; padding: 8px 10px; overflow-x: auto;
   background: var(--bg-soft); border: 1px solid var(--border); border-radius: 0;
   font-family: var(--font); font-size: 12px; line-height: 1.55;
 }
 
-/* ---------- paneles ---------- */
+/* ---------- paneles · ventanas con barra superior, como la TUI ---------- */
 .pane {
   background: var(--card); border: 1px solid var(--border);
   border-radius: 0; overflow: hidden;
@@ -217,13 +236,13 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
   padding: 8px 12px; background: var(--bg-soft);
   border-bottom: 1px solid var(--border);
 }
-.label {
+.label {   /* título de la barra: «secuenciador · chip 8-bit» */
   font-size: 11px; letter-spacing: .5px;
   color: var(--muted); text-transform: lowercase;
 }
-.pane-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+.pane-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }   /* chips a la derecha */
 
-.chip {
+.chip {   /* botón pequeño de preset; .active = pulsado */
   font: inherit; font-size: 11.5px; cursor: pointer;
   padding: 4px 10px; border-radius: 0;
   border: 1px solid var(--border); background: transparent; color: var(--muted);
@@ -232,12 +251,15 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
 .chip:hover { border-color: var(--accent); color: var(--text); }
 .chip.active { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 
-/* ---------- demo: secuenciador ---------- */
-.playground {
+/* ---------- demo: secuenciador ----------
+   Rejilla de 16 pasos × 3 pistas. Cada célula es un <button>
+   que el JS pinta con .on; .now marca el paso que suena
+   (playhead). Los colores activos = teclas del OP-1. */
+.playground {   /* secuenciador a la izquierda, captura a la derecha */
   display: grid; grid-template-columns: 1.1fr 1fr;
   gap: 16px; align-items: stretch;
 }
-.seq-head {
+.seq-head {   /* transporte: play, bpm y contador de paso */
   display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
   padding: 14px 16px 4px;
 }
@@ -272,12 +294,12 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
   transition: background .12s ease, border-color .12s ease, transform .12s ease;
 }
 .cell:hover { border-color: var(--muted); transform: translateY(-1px); }
-.cell.on { border-color: transparent; }
-.cell.kick.on  { background: var(--key-orange); }
-.cell.pulse.on { background: var(--key-blue); }
-.cell.hat.on   { background: var(--key-green); }
-.cell.now { box-shadow: 0 0 0 2px color-mix(in srgb, var(--text) 55%, transparent); }
-.screen-stage {
+.cell.on { border-color: transparent; }   /* activa: solo color, sin borde */
+.cell.kick.on  { background: var(--key-orange); }   /* naranja = bombo */
+.cell.pulse.on { background: var(--key-blue); }     /* azul = pulso */
+.cell.hat.on   { background: var(--key-green); }    /* verde = hi-hat */
+.cell.now { box-shadow: 0 0 0 2px color-mix(in srgb, var(--text) 55%, transparent); }   /* anillo del paso actual */
+.screen-stage {   /* retícula de puntos detrás de la captura, papel milimetrado */
   display: grid; place-items: center; padding: 22px;
   background-image: radial-gradient(var(--border) 1px, transparent 1px);
   background-size: 18px 18px;
@@ -287,7 +309,10 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
   border-radius: 0; border: 1px solid var(--border);
 }
 
-/* ---------- encoders ---------- */
+/* ---------- encoders · knobs giratorios ----------
+   El círculo del knob es la única curva del diseño (como el
+   hardware). La rotación se controla con la variable --ang
+   que el JS recalcula: 0% → -70° … 100% → +70°. */
 .encoders { margin-top: 22px; }
 .encoders-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
 .encoders-head h3 { margin: 0; font-size: 1.05rem; letter-spacing: -.02em; font-weight: 400; }
@@ -300,7 +325,7 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
   border-radius: 0;
 }
 .knob-unit { text-align: center; }
-.knob {
+.knob {   /* disco: degradado radial = bisel grabado; sombra inset = aro interior */
   width: 72px; height: 72px;
   border-radius: 50%;
   background:
@@ -313,7 +338,7 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
   transition: border-color .15s ease;
 }
 .knob:hover, .knob:focus-visible { border-color: var(--accent); }
-.knob-tick {
+.knob-tick {   /* marca de posición: gira con --ang desde el centro */
   position: absolute; left: 50%; top: 4px;
   width: 3px; height: 16px;
   border-radius: 0;
@@ -328,7 +353,9 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
 }
 .knob-unit output { font-family: var(--font); font-size: 12px; color: var(--text); }
 
-/* ---------- terminal ---------- */
+/* ---------- terminal · comandos copiables ----------
+   Cada línea es un comando con su `$` verde y botón de copiar
+   (el JS lee data-copy). El hover ilumina la línea entera. */
 .term-lines { padding: 8px 8px 10px; }
 .term-line {
   display: flex; align-items: center; gap: 10px;
@@ -340,9 +367,11 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
   overflow-x: auto; white-space: nowrap; padding: 0;
   background: none; border-radius: 0;
 }
-.term-line i { font-style: normal; color: var(--key-green); user-select: none; }
+.term-line i { font-style: normal; color: var(--key-green); user-select: none; }   /* el $ en verde, no seleccionable */
 
-/* ---------- ableton ---------- */
+/* ---------- ableton · diagrama ASCII del puente ----------
+   El diagrama es un <pre>: la alineación exacta la da el mono.
+   clamp lo escala y overflow-x lo salva en pantallas chicas. */
 .bridge {
   margin: 0; padding: 18px 20px;
   font-family: var(--font);
@@ -363,9 +392,9 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
   transition: border-color .2s ease;
 }
 .bridge-steps div:hover { border-color: var(--accent); }
-.bridge-steps b { color: var(--accent); font-family: var(--font); }
+.bridge-steps b { color: var(--accent); font-family: var(--font); }   /* numeración 1. 2. 3. 4. en carmesí */
 
-/* ---------- footer ---------- */
+/* ---------- footer · cierre centrado con regla ---------- */
 .footer { border-top: 1px solid var(--border); padding: 52px 24px 64px; text-align: center; }
 .foot-main { margin: 0; font-size: 15px; }
 .foot-main .heart { color: var(--accent); }
@@ -378,7 +407,9 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
 }
 .foot-links a:hover { color: var(--accent); border-color: var(--accent); }
 
-/* ---------- toast ---------- */
+/* ---------- toast · aviso efímero centrado abajo ----------
+   El JS añade .show un frame después de insertarlo para que
+   la transición corra; se autodestruye a los ~2.2 s. */
 .toast {
   position: fixed; left: 50%; bottom: 28px; z-index: 100;
   transform: translate(-50%, 16px); opacity: 0;
@@ -388,24 +419,26 @@ h1, h2, h3, h4 { font-family: var(--font); font-weight: 400; }
 }
 .toast.show { transform: translate(-50%, 0); opacity: 1; }
 
-/* ---------- responsive ---------- */
-@media (max-width: 900px) {
-  .playground { grid-template-columns: 1fr; }
+/* ---------- responsive · dos quiebres, tablet y móvil ---------- */
+@media (max-width: 900px) {   /* tablet: columnas apiladas */
+  .playground { grid-template-columns: 1fr; }   /* secuenciador y captura en vertical */
   .hero { padding-top: 64px; }
   .knobs { gap: 22px; }
 }
-@media (max-width: 640px) {
-  .nav { display: none; }
+@media (max-width: 640px) {   /* móvil: la rejilla pasa a 8×2 */
+  .nav { display: none; }   /* sin sitio para el menú: solo marca + GitHub */
   .section-head { flex-direction: column; gap: 10px; }
   .seq-row { grid-template-columns: 44px 1fr; }
-  .seq-cells { grid-template-columns: repeat(8, 1fr); }
-  .seq-cells .cell:nth-child(9) { grid-column: 1; }
-  .knob { width: 60px; height: 60px; }
-  .knob-tick { transform-origin: 50% 26px; height: 13px; }
+  .seq-cells { grid-template-columns: repeat(8, 1fr); }   /* 8 columnas → 2 filas */
+  .seq-cells .cell:nth-child(9) { grid-column: 1; }   /* el paso 9 empieza fila nueva */
+  .knob { width: 60px; height: 60px; }   /* knobs más pequeños */
+  .knob-tick { transform-origin: 50% 26px; height: 13px; }   /* el pivote sigue al nuevo radio */
   .topbar-inner { gap: 10px; }
 }
 
-/* ---------- movimiento reducido ---------- */
+/* ---------- movimiento reducido · accesibilidad ----------
+   Quien pide menos animación al SO no ve parpadeos,
+   transiciones ni scroll suave. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }

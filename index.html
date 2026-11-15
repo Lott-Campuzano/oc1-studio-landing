@@ -1,24 +1,39 @@
 <!doctype html>
+<!--
+  OC-1 STUDIO · landing
+  HTML estático: sin build, sin frameworks. Todo el contenido
+  visible vive aquí; el JS solo añade tarjetas, la demo del
+  secuenciador y los encoders. El tema lo decide el sistema.
+-->
 <html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- título + descripción: lo que muestran buscadores y redes -->
   <title>OC-1 STUDIO · la terminal es tu nuevo instrumento</title>
   <meta name="description" content="Estudio de música minimalista industrial en la terminal: secuenciador de 16 pasos, encoders, chiptune 8-bit, Ableton vía Max for Live y demos .py versionados con git. Solo Python, solo HTML/CSS/JS aquí.">
+  <!-- tema claro/oscuro lo decide el SO: no hay selector -->
   <meta name="color-scheme" content="light dark">
+  <!-- color de la barra del navegador según el esquema activo -->
   <meta name="theme-color" content="#f2f2ef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#101112" media="(prefers-color-scheme: dark)">
   <meta property="og:title" content="OC-1 STUDIO">
   <meta property="og:description" content="La terminal es tu nuevo instrumento. Hecho con GLM-5.3-Flash-Free y OpenCode.">
+  <!-- favicon inline (data URI): el cursor >_ en carmesí, sin archivo extra -->
   <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="4" y="74" font-size="56" font-family="monospace" font-weight="bold" fill="%23dc143c">&gt;_</text></svg>'>
+  <!-- tipografía: UNA sola fuente (JetBrains Mono) para toda la
+       página; preconnect acelera la descarga de los .woff2 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <!-- defer: el JS corre cuando el DOM ya está listo -->
   <script defer src="script.js"></script>
 </head>
 <body>
 
+<!-- ══════════ Topbar · fija arriba: marca con cursor parpadeante,
+     navegación por anclas y enlace al repo ══════════ -->
 <header class="topbar">
   <div class="container topbar-inner">
     <a class="brand" href="#top">OC-1&nbsp;STUDIO<span aria-hidden="true">_</span></a>
@@ -36,7 +51,7 @@
 
 <main id="top">
 
-  <!-- ══════════ Portada ══════════ -->
+  <!-- ══════════ Portada · promesa + CTAs + teclas del OP-1 ══════════ -->
   <section class="hero container">
     <p class="kicker"><span class="dot"></span>secuenciador · strudel · ableton · chiptune</p>
     <h1>La terminal es tu <em>nuevo instrumento</em></h1>
@@ -69,6 +84,7 @@
         <p class="lead">Seis ideas que hacen de OC-1 un estudio de verdad.</p>
       </div>
     </header>
+    <!-- las tarjetas-módulo las construye el JS a partir de FEATURES -->
     <div class="cards" id="cards"></div>
   </section>
 
@@ -82,6 +98,7 @@
       </div>
     </header>
 
+    <!-- dos paneles: secuenciador funcional (izq) y captura de la TUI (der) -->
     <div class="playground">
       <div class="pane">
         <div class="pane-head">
@@ -109,7 +126,8 @@
       </div>
     </div>
 
-    <!-- encoders -->
+    <!-- encoders: cada .knob-unit lleva su valor inicial en aria-valuenow,
+         que el JS lee como estado; el VOL controla el volumen real -->
     <div id="encoders" class="encoders">
       <div class="encoders-head">
         <h3>Encoders</h3>
@@ -136,7 +154,7 @@
     </div>
   </section>
 
-  <!-- ══════════ 03 · Instalar ══════════ -->
+  <!-- ══════════ 03 · Instalar · comandos copiables (data-copy) ══════════ -->
   <section id="instalar" class="section container">
     <header class="section-head">
       <span class="num">03</span>
@@ -177,7 +195,7 @@
     </p>
   </section>
 
-  <!-- ══════════ 04 · Ableton ══════════ -->
+  <!-- ══════════ 04 · Ableton · diagrama del puente UDP + pasos ══════════ -->
   <section id="ableton" class="section container">
     <header class="section-head">
       <span class="num">04</span>
@@ -203,6 +221,7 @@
 
 </main>
 
+<!-- ══════════ Footer · créditos y enlaces ══════════ -->
 <footer class="footer">
   <div class="container">
     <p class="foot-main">Hecho con amor por <strong>Lott Campuzano</strong>, <strong>GLM-5.3-Flash-Free</strong> y <strong>OpenCode</strong><span class="heart" aria-hidden="true"> ♥</span></p>

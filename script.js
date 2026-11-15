@@ -1,13 +1,38 @@
 'use strict';
 
-/* ═══════════════ Utilidades ═══════════════ */
+/* ═══════════════════════════════════════════════════════════
+   OC-1 STUDIO · landing — script (vanilla JS, sin dependencias)
+
+   Mapa del archivo:
+     1. Utilidades ....... selectores, debounce, toasts, JSON/localStorage
+     2. Tarjetas ......... FEATURES (datos) → tarjetas-módulo en el DOM
+     3. Secuenciador ..... 16 pasos × 3 pistas, WebAudio chip 8-bit
+     4. Encoders ......... knobs giratorios (drag, rueda y teclado)
+     5. Copiar ........... botones data-copy → portapapeles
+     6. Navegación ....... link activo según la sección visible
+     7. Inicio ........... init() arranca todo
+
+   Única persistencia: el patrón del secuenciador en
+   `oc1:landing:seq:v1`. El acento y el tamaño viven fijos en
+   el CSS — nada de este archivo toca la identidad.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ═══════════════ 1 · Utilidades ═══════════════ */
+
+/* $ → primer elemento que casa el selector · $$ → todos, como array */
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+
+/* debounce: pospone fn hasta que dejan de llegar eventos ms seguidos.
+   Lo usamos para no escribir en localStorage con cada clic del patrón. */
 const debounce = (fn, ms = 300) => {
   let t;
   return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
 };
 
+/* toast: aviso efímero abajo-centro. Crea el div, lo añade al body,
+   muestra con .show en el siguiente frame (para que corra la
+   transición CSS) y se autodestruye a los ~2.2 s. */
 function toast(msg) {
   const el = document.createElement('div');
   el.className = 'toast';
@@ -17,11 +42,16 @@ function toast(msg) {
   setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }, 2200);
 }
 
+/* loadJson: lee y parsea una clave de localStorage sin lanzar
+   si no existe o está corrupta — devuelve null y el llamador
+   usa sus valores por defecto. */
 function loadJson(key) {
   try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
 }
 
-/* ═══════════════ Tarjetas de características ═══════════════ */
+/* ═══════════════ 2 · Tarjetas de características ═══════════════
+   Datos puros, sin HTML: cardEl() los convierte en módulos.
+   t = título de módulo · d = descripción · ex = comando de ejemplo. */
 const FEATURES = [
   {
     t: 'tema · sistema',
@@ -55,6 +85,9 @@ const FEATURES = [
   },
 ];
 
+/* cardEl: construye una tarjeta-módulo con DOM API (sin innerHTML).
+   Cabecera = índice 01…06 (padStart rellena con ceros) + título;
+   cuerpo = descripción y <pre> con el comando de ejemplo. */
 function cardEl(card, i) {
   const art = document.createElement('article');
   art.className = 'card';
@@ -80,23 +113,35 @@ function cardEl(card, i) {
   return art;
 }
 
-/* ═══════════════ Secuenciador (WebAudio · chip 8-bit) ═══════════════ */
-const SEQ_KEY = 'oc1:landing:seq:v1';
+/* ═══════════════ 3 · Secuenciador (WebAudio · chip 8-bit) ═══════════════
+   Estado del patrón en `state` (kick/pulse/hat, 16 pasos de 0|1),
+   el DOM en `cellEls` y la persistencia en localStorage (debounced).
+   El sonido se sintetiza al vuelo: cero muestras, solo osciladores,
+   ruido blanco y envolventes — por eso suena a consola vieja. */
+const SEQ_KEY = 'oc1:landing:seq:v1';   // clave de autoguardado del patrón
+
+/* las 3 pistas: id (estado), nombre visible y color de LED */
 const ROWS = [
   { id: 'kick',  name: 'kick',  dot: 'dot-orange' },
   { id: 'pulse', name: 'pulse', dot: 'dot-blue' },
   { id: 'hat',   name: 'hat',   dot: 'dot-green' },
 ];
+/* patrones de fábrica (lecciones): cada uno es un preset completo.
+   Los arrays son de 16 — un 1 por cada paso activo. */
 const PRESETS = [
   { name: '1 · chip_boy', kick: [1,0,0,0, 1,0,1,0, 1,0,0,0, 1,0,0,0], pulse: [1,0,1,1, 0,1,0,1, 1,0,1,0, 0,1,0,1], hat: [1,1,1,0, 1,0,1,1, 1,0,1,1, 1,0,1,1] },
   { name: '2 · acid_808', kick: [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,1,0], pulse: [1,0,1,0, 0,1,0,1, 1,0,1,0, 0,1,0,1], hat: [0,1,0,1, 0,1,0,1, 0,1,0,1, 0,1,0,1] },
   { name: '3 · vacío',    kick: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0], pulse: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0], hat: [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0] },
 ];
 
+/* grid = contenedor del patrón · state = la música ·
+   cellEls = referencias a los 48 <button> para pintar sin buscar */
 const grid = $('#seq-grid');
-const state = { kick: [], pulse: [], hat: [] };
-const cellEls = { kick: [], pulse: [], hat: [] };
+const state = { kick: [], pulse: [], hat: [] };      // 1 = paso activo
+const cellEls = { kick: [], pulse: [], hat: [] };    // caché de botones
 
+/* buildGrid: genera las 3 filas × 16 botones y cuelga el listener
+   de clic (activar/desactivar paso + repintar + autoguardar). */
 function buildGrid() {
   ROWS.forEach((row) => {
     const rowEl = document.createElement('div');
@@ -130,6 +175,7 @@ function buildGrid() {
   });
 }
 
+/* paintCell: vuelca un paso del estado a su botón (.on + aria-pressed). */
 function paintCell(id, i) {
   const b = cellEls[id][i];
   const on = !!state[id][i];
@@ -141,6 +187,8 @@ function paintAll() {
   ROWS.forEach((r) => { for (let i = 0; i < 16; i++) paintCell(r.id, i); });
 }
 
+/* persistSeq: autoguardado del patrón (debounce de 400 ms:
+   clicar rápido no escribe 10 veces, escribe 1). */
 const persistSeq = debounce(() => {
   try {
     localStorage.setItem(SEQ_KEY, JSON.stringify({
@@ -149,6 +197,8 @@ const persistSeq = debounce(() => {
   } catch { /* sin almacenamiento */ }
 }, 400);
 
+/* renderPresets: crea los chips 1·chip_boy 2·acid_808 3·vacío.
+   Al pulsar uno copia sus arrays al estado, repinta y avisa. */
 function renderPresets() {
   const box = $('#seq-presets');
   PRESETS.forEach((p) => {
@@ -169,6 +219,8 @@ function renderPresets() {
   box.firstChild.classList.add('active');
 }
 
+/* loadSeq: al cargar la página recupera el patrón guardado
+   (o el preset 1 si es la primera visita) y repinta todo. */
 function loadSeq() {
   const saved = loadJson(SEQ_KEY);
   ROWS.forEach((r) => { state[r.id] = [...(saved && saved[r.id]) || [...PRESETS[0][r.id]]]; });
@@ -176,10 +228,17 @@ function loadSeq() {
   paintAll();
 }
 
-/* --- audio --- */
+/* --- audio · motor WebAudio -----------------------------------
+   ctx      = AudioContext (se crea en el primer gesto del usuario)
+   master   = ganancia final que gobierna el knob VOL
+   noiseBuf = búfer de ruido blanco reutilizado por el hi-hat
+   playing / step / timer = estado del transporte                     */
 let ctx = null, master = null, noiseBuf = null;
 let playing = false, step = 0, timer = null;
 
+/* ensureAudio: los navegadores bloquean el audio hasta que el
+   usuario interactúa; aquí se crea el contexto (una sola vez)
+   y se reanuda si estaba suspendido. */
 function ensureAudio() {
   if (!ctx) {
     const AC = window.AudioContext || window.webkitAudioContext;
@@ -229,11 +288,15 @@ const bpmInput = $('#seq-bpm');
 const stepLabel = $('#seq-step');
 const playBtn = $('#seq-play');
 
+/* paintStep: mueve el anillo del playhead al paso i. */
 function paintStep(i) {
   $$('.cell.now').forEach((c) => c.classList.remove('now'));
   $$('.cell[data-i="' + i + '"]').forEach((c) => c.classList.add('now'));
 }
 
+/* playStep: el reloj del secuenciador. Dispara las voces activas
+   del paso, actualiza contador y playhead, y se re-agenda con
+   setTimeout a la duración de una semicorchea (60/bpm/4 s). */
 function playStep() {
   ensureAudio();
   const t = ctx.currentTime + 0.02;
@@ -247,6 +310,8 @@ function playStep() {
   timer = setTimeout(() => { step = (step + 1) % 16; playStep(); }, spb * 1000);
 }
 
+/* togglePlay: play/stop del botón ▶. Al parar limpia el timer,
+   el playhead y resetea el paso a 0. */
 function togglePlay() {
   if (playing) {
     playing = false;
@@ -263,10 +328,17 @@ function togglePlay() {
   }
 }
 
-/* ═══════════════ Encoders ═══════════════ */
-const knobState = {};
-function setVolume(v) { if (master) master.gain.value = v; }
+/* ═══════════════ 4 · Encoders ═══════════════
+   Cuatro knobs: reverb, delay, drive y vol. Los tres primeros
+   guardan su valor (la TUI los usa); VOL controla de verdad
+   la ganancia del demo. La rotación vive en la variable CSS
+   --ang: 0% → -70° · 100% → +70° (arco de 140°). */
+const knobState = {};   // { reverb: 18, delay: 22, … } — valor de cada encoder
+function setVolume(v) { if (master) master.gain.value = v; }   // vol → ganancia real del AudioContext
 
+/* setKnob: fija un knob a un valor 0-100 — recorta, gira el tick
+   vía --ang, actualiza el <output>, guarda estado y si es VOL
+   aplica la ganancia al master en vivo. */
 function setKnob(unit, raw) {
   const pct = Math.max(0, Math.min(100, Math.round(raw)));
   const knob = $('.knob', unit);
@@ -279,6 +351,12 @@ function setKnob(unit, raw) {
   return pct;
 }
 
+/* bindKnobs: tres formas de girar cada encoder:
+   · arrastre vertical (pointer events + capture: el drag sigue
+     aunque el cursor salga del knob)
+   · rueda del ratón (±3 por muesca, preventDefault para no
+     hacer scroll de la página)
+   · teclado ↑↓←→ (accesible, el knob tiene tabindex) */
 function bindKnobs() {
   $$('.knob-unit').forEach((unit) => {
     const knob = $('.knob', unit);
@@ -310,7 +388,9 @@ function bindKnobs() {
   });
 }
 
-/* ═══════════════ Copiar ═══════════════ */
+/* ═══════════════ 5 · Copiar ═══════════════
+   Botones [data-copy] de la sección Instalar: copian el comando
+   al portapapeles con la API async y confirman con toast. */
 function bindCopy() {
   $$('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
     try {
@@ -322,7 +402,10 @@ function bindCopy() {
   }));
 }
 
-/* ═══════════════ Navegación activa ═══════════════ */
+/* ═══════════════ 6 · Navegación activa ═══════════════
+   Un IntersectionObserver vigila las 4 secciones; cuando una
+   cruza la franja central de la pantalla (rootMargin negativo),
+   marca su link de la topbar como .active. */
 function bindNav() {
   const links = $$('.nav a[data-section]');
   const map = {};
@@ -342,7 +425,9 @@ function bindNav() {
   });
 }
 
-/* ═══════════════ Inicio ═══════════════ */
+/* ═══════════════ 7 · Inicio ═══════════════
+   El script carga con `defer`: el DOM ya está aquí al ejecutarse,
+   por eso las const iniciales pueden buscar nodos sin esperar. */
 function init() {
   FEATURES.forEach((c, i) => $('#cards').appendChild(cardEl(c, i)));
 

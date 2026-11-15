@@ -46,6 +46,9 @@ assets/
   captura-tui.svg   captura real de la TUI exportada desde la app
 ```
 
+Los tres archivos están **comentados fragmento a fragmento** —
+léelos como documentación: qué hace cada bloque y por qué.
+
 ## Probar en local
 
 ```bash
