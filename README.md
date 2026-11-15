@@ -15,8 +15,10 @@ dependencias. Abre `index.html` y funciona.
   (`#101112`), y un solo color de acento elegible con swatches con nombre
   (carmesí, TE naranja, papaya, cian, verde TE, humo) + selector
   personalizado — como en `webasis`.
-* **Tipografía**: JetBrains Mono para titulares, marca, etiquetas y botones;
-  Helvetica para el cuerpo. Con fallback monoespaciado si no hay red.
+* **Tipografía**: JetBrains Mono para todo el texto (cuerpo, etiquetas,
+  botones, código) — la página vive en la terminal. Titulares y marca en
+  **Baloo 2**, la redonda «cilíndrica» tipo Be Happy, con fallbacks
+  redondos (Fredoka, Comfortaa, ui-rounded) si no hay red.
 * **Las cuatro teclas del OP-1** como colores funcionales fijos de hardware:
   naranja = kick, azul = pulse, verde = hat, blanco = seq.
 * **Industrial y plano**: cursor `>_` parpadeante en la marca, secciones
