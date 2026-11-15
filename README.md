@@ -1,33 +1,49 @@
 # OC-1 STUDIO — landing
 
 Landing page de promoción de [OC-1 STUDIO](https://github.com/Lott-Campuzano/oc1-studio),
-el estudio de música que vive en la terminal con estética Teenage Engineering.
+el estudio de música que vive en la terminal con estética **Teenage Engineering
+y Arturia** — minimalista industrial, con la filosofía de diseño de
+[Lott Campuzano](https://lott-campuzano.vercel.app/) (véase
+[`webasis`](https://github.com/Lott-Campuzano/webasis)).
 
-**Solo HTML + CSS + JavaScript puro** — cero frameworks, cero build, cero dependencias.
-Ábrelo y funciona.
+**Solo HTML + CSS + JavaScript puro** — cero frameworks, cero build, cero
+dependencias. Abre `index.html` y funciona.
 
-## Características de la página
+## Diseño · la filosofía aplicada
 
-* **Temas claro/oscuro que siguen al sistema** (`prefers-color-scheme`) con
-  override manual en el botón de la esquina: `AUTO → DARK → LIGHT`,
-  persistente en `localStorage`. En `AUTO` la página reacciona sola cuando
-  cambias la apariencia de tu sistema — igual que la TUI de OC-1.
-* **Estética Teenage Engineering**: monoespaciada, los 4 acentos del OP-1
-  (naranja/azul/verde/blanco), puntos de color, teclas `syn/drum/tape/seq`,
-  encoders giratorios y paneles con borde fino.
-* **Secuenciador demo funcional**: 16 pasos × 3 pistas que suenan con WebAudio
-  (ondas cuadradas estilo chiptune, cero muestras de audio). Toca las casillas,
-  cambia el BPM y gira el encoder VOL — que controla el volumen de verdad.
-* **Responsive**: móvil → escritorio con CSS grid y `clamp()`.
-* Accesible: `role=slider` en los encoders, `aria-pressed` en las casillas,
-  `prefers-reduced-motion` respetado.
+* **Neutros cálidos + un acento**: blanco hueso / negro humo, y un solo color
+  de acento elegible con swatches con nombre (TE naranja, papaya, brasa,
+  cian, verde TE, frambuesa) + selector personalizado — como en `webasis`.
+* **Tipografía**: JetBrains Mono para titulares, marca, etiquetas y botones;
+  Helvetica para el cuerpo. Con fallback monoespaciado si no hay red.
+* **Las cuatro teclas del OP-1** como colores funcionales fijos de hardware:
+  naranja = kick, azul = pulse, verde = hat, blanco = seq.
+* **Industrial**: cursor `>_` parpadeante en la marca, secciones numeradas
+  `01 02 03 04`, retícula de puntos, etiquetas de archivo
+  (`secuenciador · chip 8-bit`), encoders giratorios.
+* **Píldoras y tarjetas suaves**: botones/chips/toasts en `999px`, tarjetas y
+  paneles con radio personalizable y sombra doble cálida.
+* **Sonido con síntesis del navegador**: botones 🔊 que explican el proyecto
+  en español con `speechSynthesis` (voz es-*, se detiene al ocultar la
+  pestaña) — la experimentación sonora como forma de documentar.
+* **Secuenciador demo funcional**: 16 pasos × 3 pistas con WebAudio (ondas
+  cuadradas chiptune, cero muestras), presets tipo lecciones (`chip_boy`,
+  `acid_808`, vacío) y **autoguardado del patrón** en `localStorage`.
+* **Titular que se ensambla**: cada palabra llega volando con
+  `cubic-bezier(.2,.9,.3,1.2)` y desfase de 70 ms.
+* **Todo se guarda en tu navegador. Tu espacio, tus reglas.**: tema, acento,
+  esquinas y tamaño base persisten en `oc1:landing:v1`.
+* **Temas**: `AUTO` sigue a tu sistema (`prefers-color-scheme`), más `DARK` y
+  `LIGHT` fijos — como la TUI de OC-1.
+* **Responsive** (1080px contenedor; quiebres en 900px y 640px) y
+  `prefers-reduced-motion` respetado por completo.
 
 ## Estructura
 
 ```
-index.html          marcado (una página, secciones ancla)
-style.css           tokens de tema, estética TE, responsive
-script.js           tema, reveal, copiar, encoders, secuenciador WebAudio
+index.html          marcado (portada, 01–04, panel de personalización)
+style.css           tokens de tema, estética TE/Arturia, responsive
+script.js           ajustes, audio, tarjetas, secuenciador, encoders, toasts
 assets/
   captura-tui.svg   captura real de la TUI exportada desde la app
 ```
@@ -46,4 +62,4 @@ GitHub Pages desde la rama `main`.
 
 ---
 
-*Hecho con **GLM-5.3-Flash-Free** y **OpenCode** — la música la pones tú.* 🎛️
+*Hecho con amor por **Lott Campuzano**, **GLM-5.3-Flash-Free** y **OpenCode** ♥*
