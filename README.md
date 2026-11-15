@@ -11,9 +11,10 @@ dependencias. Abre `index.html` y funciona.
 
 ## Diseño · la filosofía aplicada
 
-* **Neutros cálidos + un acento**: blanco hueso / negro humo, y un solo color
-  de acento elegible con swatches con nombre (TE naranja, papaya, brasa,
-  cian, verde TE, frambuesa) + selector personalizado — como en `webasis`.
+* **Neutros fríos + un acento**: blanco hueso frío (`#f2f2ef`) / negro carbón
+  (`#101112`), y un solo color de acento elegible con swatches con nombre
+  (carmesí, TE naranja, papaya, cian, verde TE, humo) + selector
+  personalizado — como en `webasis`.
 * **Tipografía**: JetBrains Mono para titulares, marca, etiquetas y botones;
   Helvetica para el cuerpo. Con fallback monoespaciado si no hay red.
 * **Las cuatro teclas del OP-1** como colores funcionales fijos de hardware:
@@ -22,15 +23,10 @@ dependencias. Abre `index.html` y funciona.
   `01 02 03 04`, retícula de puntos, etiquetas de archivo
   (`secuenciador · chip 8-bit`), encoders giratorios.
 * **Píldoras y tarjetas suaves**: botones/chips/toasts en `999px`, tarjetas y
-  paneles con radio personalizable y sombra doble cálida.
-* **Sonido con síntesis del navegador**: botones 🔊 que explican el proyecto
-  en español con `speechSynthesis` (voz es-*, se detiene al ocultar la
-  pestaña) — la experimentación sonora como forma de documentar.
+  paneles con radio personalizable y sombra doble suave.
 * **Secuenciador demo funcional**: 16 pasos × 3 pistas con WebAudio (ondas
   cuadradas chiptune, cero muestras), presets tipo lecciones (`chip_boy`,
   `acid_808`, vacío) y **autoguardado del patrón** en `localStorage`.
-* **Titular que se ensambla**: cada palabra llega volando con
-  `cubic-bezier(.2,.9,.3,1.2)` y desfase de 70 ms.
 * **Todo se guarda en tu navegador. Tu espacio, tus reglas.**: tema, acento,
   esquinas y tamaño base persisten en `oc1:landing:v1`.
 * **Temas**: `AUTO` sigue a tu sistema (`prefers-color-scheme`), más `DARK` y
@@ -43,7 +39,7 @@ dependencias. Abre `index.html` y funciona.
 ```
 index.html          marcado (portada, 01–04, panel de personalización)
 style.css           tokens de tema, estética TE/Arturia, responsive
-script.js           ajustes, audio, tarjetas, secuenciador, encoders, toasts
+script.js           ajustes, tarjetas, secuenciador, encoders, toasts
 assets/
   captura-tui.svg   captura real de la TUI exportada desde la app
 ```

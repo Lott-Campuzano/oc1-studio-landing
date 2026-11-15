@@ -23,7 +23,7 @@ function loadJson(key) {
 
 /* ═══════════════ Personalización ═══════════════ */
 const SETTINGS_KEY = 'oc1:landing:v1';
-const SETTINGS_DEFAULTS = { theme: 'auto', accent: '#ff5300', radius: 14, size: 16 };
+const SETTINGS_DEFAULTS = { theme: 'auto', accent: '#dc143c', radius: 14, size: 16 };
 let settings = { ...SETTINGS_DEFAULTS };
 
 function loadSettings() {
@@ -85,72 +85,37 @@ function bindSettings() {
   });
 }
 
-/* ═══════════════ Audio (síntesis del navegador) ═══════════════ */
-const synth = window.speechSynthesis || null;
-
-function pickVoice() {
-  if (!synth) return null;
-  return synth.getVoices().find((v) => (v.lang || '').toLowerCase().startsWith('es')) || null;
-}
-
-function setSpeakingUI(on) { const b = $('#stop-audio'); if (b) b.hidden = !on; }
-
-function speak(text) {
-  if (!synth) { toast('Tu navegador no soporta audio de síntesis 😅'); return; }
-  synth.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  const v = pickVoice();
-  if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = 'es-ES'; }
-  u.rate = 1.04; u.pitch = 1;
-  u.onend = () => setSpeakingUI(false);
-  u.onerror = () => setSpeakingUI(false);
-  synth.speak(u);
-  setSpeakingUI(true);
-}
-
-function bindAudio() {
-  $('#stop-audio').addEventListener('click', () => { if (synth) synth.cancel(); });
-  $$('[data-say]').forEach((b) => b.addEventListener('click', () => speak(b.dataset.say)));
-  document.addEventListener('visibilitychange', () => { if (document.hidden && synth) synth.cancel(); });
-}
-
 /* ═══════════════ Tarjetas de características ═══════════════ */
 const FEATURES = [
   {
     t: 'tema · sistema',
     d: 'Claro y oscuro que siguen a la apariencia de tu sistema y se sondean cada 5 s. Cuatro acentos TE: naranja, azul, verde y blanco.',
     ex: 'appearance: auto   # sigue al sistema',
-    say: 'Los temas son dinámicos: la interfaz sigue al modo claro u oscuro de tu sistema y cambia sola cada cinco segundos. Cada acento tiene su variante clara y su variante oscura.',
   },
   {
     t: 'ableton live',
     d: 'Puente Max for Live por UDP: tus notas a MIDI y un reloj de 16avos sincronizado con el transporte de Live.',
     ex: 'oc1 note 36 110  →  udp:7647',
-    say: 'El puente a Ableton convierte las notas del secuenciador en MIDI real y recibe el reloj de dieciseisavos sincronizado con el transporte de Live. Tú secuencias, tus instrumentos suenan.',
   },
   {
     t: 'chiptune',
     d: 'Sonido de computadora vieja: pulsos al 25 %, ruido de 1 bit, reloj decimado a ~7 kHz y eco tipo Game Boy.',
     ex: '.coarse(8).crush(4)   # strudel',
-    say: 'El estilo chip suena a computadora vieja: pulsos cuadrados, ruido de un bit y un reloj decimado. La frase exacta para Strudel es punto coarse de ocho y punto crush de cuatro.',
   },
   {
     t: 'strudel',
     d: 'Tu demo se abre en strudel.cc ya cargado, o en un player local con editor y REPL en vivo.',
     ex: 'oc1studio strudel demo.py',
-    say: 'Strudel es el live-coding en el navegador. Un comando abre tu demo cargado y listo para editar en vivo, sin instalar nada.',
   },
   {
     t: 'demos · py',
     d: 'Cada canción es un archivo Python editable: lo lees, lo cambias, lo versionas. Sin formatos cerrados.',
     ex: 'Track(name="pulse",\n  pattern="e2 ~ e3 ~ …")',
-    say: 'Tus demos son archivos de Python: texto plano que puedes leer, editar y compartir. La pista se define con un nombre, un sonido y un patrón de dieciséis pasos.',
   },
   {
     t: 'git integrado',
     d: 'init, clone, commit, push y pull desde la propia TUI, con auto-commit al guardar.',
     ex: 'oc1studio git push',
-    say: 'Git está integrado en la interfaz: inicializa, clona, guarda versiones y sube a GitHub sin salir del estudio. Tu backup es tu historial.',
   },
 ];
 
@@ -162,14 +127,7 @@ function cardEl(card) {
   head.className = 'card-head';
   const h4 = document.createElement('h4');
   h4.textContent = card.t;
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className = 'listen';
-  btn.title = 'Escuchar explicación';
-  btn.setAttribute('aria-label', 'Escuchar: ' + card.t);
-  btn.textContent = '🔊';
-  btn.addEventListener('click', () => speak(card.say));
-  head.append(h4, btn);
+  head.append(h4);
 
   const p = document.createElement('p');
   p.textContent = card.d;
@@ -445,54 +403,11 @@ function bindNav() {
   });
 }
 
-/* ═══════════════ Titular que se ensambla ═══════════════ */
-function assembleHeadline() {
-  const h1 = $('.hero h1');
-  if (!h1) return;
-
-  const out = [];
-  Array.from(h1.childNodes).forEach((node) => {
-    const isEm = node.nodeType === 1;
-    node.textContent.split(/(\s+)/).forEach((part) => {
-      if (!part) return;
-      if (/^\s+$/.test(part)) { out.push(document.createTextNode(' ')); return; }
-      let word;
-      if (isEm) {
-        const em = document.createElement('em');
-        word = document.createElement('span');
-        word.className = 'hero-word';
-        word.textContent = part;
-        em.appendChild(word);
-        out.push(em);
-      } else {
-        word = document.createElement('span');
-        word.className = 'hero-word';
-        word.textContent = part;
-        out.push(word);
-      }
-    });
-  });
-  h1.replaceChildren(...out);
-
-  let i = 0;
-  out.forEach((n) => {
-    if (!(n.nodeType === 1 && n.classList.contains('hero-word'))) return;
-    const big = !!n.closest('em');
-    const spread = big ? 3 : 1;
-    n.style.setProperty('--sx', Math.round((Math.random() * 2 - 1) * 70 * spread) + 'px');
-    n.style.setProperty('--sy', Math.round((Math.random() * 2 - 1) * 60 * spread) + 'px');
-    n.style.setProperty('--sr', Math.round((Math.random() * 2 - 1) * 16 * spread) + 'deg');
-    n.style.animationDelay = (i * 70) + 'ms';
-    i++;
-  });
-}
-
 /* ═══════════════ Inicio ═══════════════ */
 function init() {
   loadSettings();
   applySettings();
   bindSettings();
-  bindAudio();
 
   FEATURES.forEach((c) => $('#cards').appendChild(cardEl(c)));
 
@@ -505,7 +420,6 @@ function init() {
   bindKnobs();
   bindCopy();
   bindNav();
-  assembleHeadline();
 }
 
 init();

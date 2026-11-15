@@ -6,11 +6,11 @@
   <title>OC-1 STUDIO · la terminal es tu nuevo instrumento</title>
   <meta name="description" content="Estudio de música minimalista industrial en la terminal: secuenciador de 16 pasos, encoders, chiptune 8-bit, Ableton vía Max for Live y demos .py versionados con git. Solo Python, solo HTML/CSS/JS aquí.">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#f3f0e8" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1c1a17" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f2f2ef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#101112" media="(prefers-color-scheme: dark)">
   <meta property="og:title" content="OC-1 STUDIO">
   <meta property="og:description" content="La terminal es tu nuevo instrumento. Hecho con GLM-5.3-Flash-Free y OpenCode.">
-  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="4" y="74" font-size="56" font-family="monospace" font-weight="bold" fill="%23ff5300">&gt;_</text></svg>'>
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="4" y="74" font-size="56" font-family="monospace" font-weight="bold" fill="%23dc143c">&gt;_</text></svg>'>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
@@ -29,7 +29,6 @@
       <a href="#ableton" data-section="ableton">Ableton</a>
     </nav>
     <div class="topbar-actions">
-      <button id="stop-audio" class="btn small ghost" type="button" hidden>⏹ Detener audio</button>
       <button id="open-settings" class="btn small" type="button">// personalizar</button>
       <a class="btn small ghost" href="https://github.com/Lott-Campuzano/oc1-studio" target="_blank" rel="noopener">GitHub ↗</a>
     </div>
@@ -50,18 +49,9 @@
     </p>
     <div class="hero-actions">
       <a class="btn" href="#demo">▶ Probar el demo ↓</a>
-      <button class="btn ghost" type="button"
-        data-say="Te doy la bienvenida a OC-1 STUDIO, un estudio de música que vive en tu terminal. Secuenciador de dieciséis pasos, encoders, chiptune y Ableton Live. Edita, rompe, repara y repite: así se hace música.">🔊 Escuchar intro</button>
       <a class="btn ghost" href="https://github.com/Lott-Campuzano/oc1-studio" target="_blank" rel="noopener">⧉ Ver código</a>
     </div>
 
-    <!-- tira de 16 pasos · indicador del "instrumento" -->
-    <div class="led-strip" aria-hidden="true">
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span>
-    </div>
     <!-- las cuatro teclas del OP-1 -->
     <div class="color-keys" aria-hidden="true">
       <span class="key"><i class="dot dot-orange"></i>syn</span>
@@ -77,7 +67,7 @@
       <span class="num">01</span>
       <div>
         <h2>Características</h2>
-        <p class="lead">Seis ideas que hacen de OC-1 un estudio de verdad. Pulsa 🔊 para escuchar cada una.</p>
+        <p class="lead">Seis ideas que hacen de OC-1 un estudio de verdad.</p>
       </div>
     </header>
     <div class="cards" id="cards"></div>
@@ -90,8 +80,6 @@
       <div>
         <h2>Demo · el secuenciador</h2>
         <p class="lead">Un secuenciador de 16 pasos como el de OC-1, sonando con síntesis del navegador. Toca las casillas.</p>
-        <button class="listen-mini" type="button"
-          data-say="Un secuenciador de dieciséis pasos que corre en tu navegador con ondas cuadradas estilo chiptune. Pulsa las casillas para dibujar el patrón, cambia el tempo y dale play. El volumen lo manda el encoder VOL, aquí abajo.">🔊 ¿Qué es esto?</button>
       </div>
     </header>
 
@@ -156,8 +144,6 @@
       <div>
         <h2>Instalar · dos minutos</h2>
         <p class="lead">Pega estas líneas en tu Terminal (macOS/Linux) o PowerShell (Windows). Requisito único: <b>Python 3.10+</b>.</p>
-        <button class="listen-mini" type="button"
-          data-say="Instalación en dos minutos. Clona el repositorio, entra a la carpeta, crea tu entorno virtual, instala y corre. El requisito único es Python tres punto diez o superior. ¿Nunca has usado la terminal? Hay una guía para principiantes en el repositorio.">🔊 ¿Cómo se instala?</button>
       </div>
     </header>
 
@@ -199,8 +185,6 @@
       <div>
         <h2>Ableton + Max for Live</h2>
         <p class="lead">OC-1 secuencia; Ableton suena. Se hablan por dentro de tu máquina — sin nube, sin servidores.</p>
-        <button class="listen-mini" type="button"
-          data-say="OC-1 es el secuenciador y Ableton es el sonido. Se comunican por dentro de tu máquina con Max for Live: las notas llegan por un puerto y el reloj de dieciseisavos regresa por otro, sincronizado con el transporte de Live. Pegas el dispositivo, pulsas V y le das play.">🔊 ¿Cómo se conectan?</button>
       </div>
     </header>
 
@@ -228,7 +212,6 @@
       <a href="https://github.com/Lott-Campuzano/oc1-studio/issues" target="_blank" rel="noopener">issues ↗</a>
       <a href="https://github.com/Lott-Campuzano/oc1-studio-landing" target="_blank" rel="noopener">esta landing ↗</a>
     </p>
-    <p class="foot-sub">OC-1 STUDIO · para músicos que crean en la terminal //</p>
   </div>
 </footer>
 
@@ -252,14 +235,14 @@
   <div class="control">
     <span class="control-label">Color de acento</span>
     <div class="swatches" id="swatches">
+      <button type="button" class="swatch" style="--sw:#dc143c" data-accent="#dc143c" aria-label="Carmesí"></button>
       <button type="button" class="swatch" style="--sw:#ff5300" data-accent="#ff5300" aria-label="TE naranja"></button>
       <button type="button" class="swatch" style="--sw:#ff8000" data-accent="#ff8000" aria-label="Papaya"></button>
-      <button type="button" class="swatch" style="--sw:#e8590c" data-accent="#e8590c" aria-label="Brasa"></button>
       <button type="button" class="swatch" style="--sw:#1098ad" data-accent="#1098ad" aria-label="Cian"></button>
       <button type="button" class="swatch" style="--sw:#00d26a" data-accent="#00d26a" aria-label="Verde TE"></button>
-      <button type="button" class="swatch" style="--sw:#d6336c" data-accent="#d6336c" aria-label="Frambuesa"></button>
+      <button type="button" class="swatch" style="--sw:#1d1b17" data-accent="#1d1b17" aria-label="Humo"></button>
       <label class="swatch custom" title="Color personalizado">
-        <input type="color" id="accent-input" value="#ff5300"><span>＋</span>
+        <input type="color" id="accent-input" value="#dc143c"><span>＋</span>
       </label>
     </div>
   </div>
