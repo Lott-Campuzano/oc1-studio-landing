@@ -11,14 +11,14 @@ dependencias. Abre `index.html` y funciona.
 
 ## Diseño · la filosofía aplicada
 
-* **Neutros fríos + un acento**: blanco hueso frío (`#f2f2ef`) / negro carbón
-  (`#101112`), y un solo color de acento elegible con swatches con nombre
-  (carmesí, TE naranja, papaya, cian, verde TE, humo) + selector
-  personalizado — como en `webasis`.
-* **Tipografía**: JetBrains Mono para todo el texto (cuerpo, etiquetas,
-  botones, código) — la página vive en la terminal. Titulares y marca en
-  **Baloo 2**, la redonda «cilíndrica» tipo Be Happy, con fallbacks
-  redondos (Fredoka, Comfortaa, ui-rounded) si no hay red.
+* **Neutros fríos + un acento fijo**: blanco hueso frío (`#f2f2ef`) / negro
+  carbón (`#101112`), y un solo color de acento **fijo como el hardware**:
+  rojo carmesí `#dc143c`. Nada se personaliza — como en un sinte real.
+* **Tipografía**: **una sola fuente en toda la página** — JetBrains Mono —
+  inspirada en [arturia.com](https://www.arturia.com/) y
+  [opencode.ai](https://opencode.ai/es), donde todo vive en el mismo
+  monoespaciado. Titulares en peso 400 con tracking apretado (`-.03em`)
+  y line-height compacto, como opencode.ai.
 * **Las cuatro teclas del OP-1** como colores funcionales fijos de hardware:
   naranja = kick, azul = pulse, verde = hat, blanco = seq.
 * **Industrial y plano**: cursor `>_` parpadeante en la marca, secciones
@@ -31,19 +31,17 @@ dependencias. Abre `index.html` y funciona.
 * **Secuenciador demo funcional**: 16 pasos × 3 pistas con WebAudio (ondas
   cuadradas chiptune, cero muestras), presets tipo lecciones (`chip_boy`,
   `acid_808`, vacío) y **autoguardado del patrón** en `localStorage`.
-* **Todo se guarda en tu navegador. Tu espacio, tus reglas.**: tema, acento
-  y tamaño base persisten en `oc1:landing:v1`.
-* **Temas**: `AUTO` sigue a tu sistema (`prefers-color-scheme`), más `DARK` y
-  `LIGHT` fijos — como la TUI de OC-1.
+* **Temas**: el tema sigue a tu sistema con `prefers-color-scheme` —
+  sin interruptores, como el hardware.
 * **Responsive** (1080px contenedor; quiebres en 900px y 640px) y
   `prefers-reduced-motion` respetado por completo.
 
 ## Estructura
 
 ```
-index.html          marcado (portada, 01–04, panel de personalización)
-style.css           tokens de tema, estética TE/Arturia, responsive
-script.js           ajustes, tarjetas, secuenciador, encoders, toasts
+index.html          marcado (portada, secciones 01–04)
+style.css           tokens, una sola fuente, estética TE/Arturia, responsive
+script.js           tarjetas, secuenciador, encoders, toasts
 assets/
   captura-tui.svg   captura real de la TUI exportada desde la app
 ```

@@ -21,64 +21,6 @@ function loadJson(key) {
   try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
 }
 
-/* ═══════════════ Personalización ═══════════════ */
-const SETTINGS_KEY = 'oc1:landing:v1';
-const SETTINGS_DEFAULTS = { theme: 'auto', accent: '#dc143c', size: 16 };
-let settings = { ...SETTINGS_DEFAULTS };
-
-function loadSettings() {
-  settings = { ...SETTINGS_DEFAULTS, ...(loadJson(SETTINGS_KEY) || {}) };
-}
-
-function persistSettings() {
-  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch { /* sin almacenamiento */ }
-}
-
-function applySettings() {
-  const root = document.documentElement;
-  root.dataset.theme = settings.theme;
-  root.style.setProperty('--accent', settings.accent);
-  root.style.setProperty('--size', settings.size + 'px');
-
-  $$('#swatches .swatch[data-accent]').forEach((b) =>
-    b.classList.toggle('active', b.dataset.accent.toLowerCase() === String(settings.accent).toLowerCase()));
-  const accentInput = $('#accent-input');
-  if (accentInput) accentInput.value = settings.accent;
-  const siz = $('#size-range');
-  if (siz) { siz.value = settings.size; $('#size-out').textContent = settings.size + 'px'; }
-  $$('#theme-seg button').forEach((b) =>
-    b.classList.toggle('active', b.dataset.themeOpt === settings.theme));
-}
-
-function openSettings() { $('#settings').classList.add('open'); $('#overlay').hidden = false; }
-function closeSettings() { $('#settings').classList.remove('open'); $('#overlay').hidden = true; }
-
-function bindSettings() {
-  $('#open-settings').addEventListener('click', openSettings);
-  $('#settings-close').addEventListener('click', closeSettings);
-  $('#overlay').addEventListener('click', closeSettings);
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSettings(); });
-
-  $$('#theme-seg button').forEach((b) => b.addEventListener('click', () => {
-    settings.theme = b.dataset.themeOpt; persistSettings(); applySettings();
-    toast(settings.theme === 'auto' ? 'tema: sigue a tu sistema ◐' :
-          settings.theme === 'dark' ? 'tema: oscuro ●' : 'tema: claro ○');
-  }));
-  $$('#swatches .swatch[data-accent]').forEach((b) => b.addEventListener('click', () => {
-    settings.accent = b.dataset.accent; persistSettings(); applySettings();
-  }));
-  $('#accent-input').addEventListener('input', (e) => {
-    settings.accent = e.target.value; persistSettings(); applySettings();
-  });
-  $('#size-range').addEventListener('input', (e) => {
-    settings.size = +e.target.value; persistSettings(); applySettings();
-  });
-  $('#settings-reset').addEventListener('click', () => {
-    settings = { ...SETTINGS_DEFAULTS }; persistSettings(); applySettings();
-    toast('OC-1 restablecido //');
-  });
-}
-
 /* ═══════════════ Tarjetas de características ═══════════════ */
 const FEATURES = [
   {
@@ -402,10 +344,6 @@ function bindNav() {
 
 /* ═══════════════ Inicio ═══════════════ */
 function init() {
-  loadSettings();
-  applySettings();
-  bindSettings();
-
   FEATURES.forEach((c, i) => $('#cards').appendChild(cardEl(c, i)));
 
   buildGrid();

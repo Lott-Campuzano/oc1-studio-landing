@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" data-theme="auto">
+<html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,7 +13,7 @@
   <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="4" y="74" font-size="56" font-family="monospace" font-weight="bold" fill="%23dc143c">&gt;_</text></svg>'>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
 </head>
@@ -29,7 +29,6 @@
       <a href="#ableton" data-section="ableton">Ableton</a>
     </nav>
     <div class="topbar-actions">
-      <button id="open-settings" class="btn small" type="button">// personalizar</button>
       <a class="btn small ghost" href="https://github.com/Lott-Campuzano/oc1-studio" target="_blank" rel="noopener">GitHub ↗</a>
     </div>
   </div>
@@ -214,47 +213,6 @@
     </p>
   </div>
 </footer>
-
-<!-- ══════════ Panel de personalización ══════════ -->
-<aside id="settings" class="settings" aria-label="Panel de personalización">
-  <div class="settings-head">
-    <h3>Personalizar</h3>
-    <button class="icon-btn" type="button" id="settings-close" aria-label="Cerrar panel">✕</button>
-  </div>
-  <p class="settings-note">Todo se guarda en tu navegador. Tu espacio, tus reglas.</p>
-
-  <div class="control">
-    <span class="control-label">Tema · <em>auto sigue a tu sistema</em></span>
-    <div class="segmented" id="theme-seg">
-      <button type="button" data-theme-opt="auto">◐ Auto</button>
-      <button type="button" data-theme-opt="dark">● Oscuro</button>
-      <button type="button" data-theme-opt="light">○ Claro</button>
-    </div>
-  </div>
-
-  <div class="control">
-    <span class="control-label">Color de acento</span>
-    <div class="swatches" id="swatches">
-      <button type="button" class="swatch" style="--sw:#dc143c" data-accent="#dc143c" aria-label="Carmesí"></button>
-      <button type="button" class="swatch" style="--sw:#ff5300" data-accent="#ff5300" aria-label="TE naranja"></button>
-      <button type="button" class="swatch" style="--sw:#ff8000" data-accent="#ff8000" aria-label="Papaya"></button>
-      <button type="button" class="swatch" style="--sw:#1098ad" data-accent="#1098ad" aria-label="Cian"></button>
-      <button type="button" class="swatch" style="--sw:#00d26a" data-accent="#00d26a" aria-label="Verde TE"></button>
-      <button type="button" class="swatch" style="--sw:#1d1b17" data-accent="#1d1b17" aria-label="Humo"></button>
-      <label class="swatch custom" title="Color personalizado">
-        <input type="color" id="accent-input" value="#dc143c"><span>＋</span>
-      </label>
-    </div>
-  </div>
-
-  <div class="control">
-    <label class="control-label" for="size-range">Texto base <output id="size-out">16px</output></label>
-    <input type="range" id="size-range" min="14" max="20" value="16">
-  </div>
-
-  <button class="btn ghost" id="settings-reset" type="button">↺ Restablecer todo</button>
-</aside>
-<div id="overlay" hidden></div>
 
 </body>
 </html>
